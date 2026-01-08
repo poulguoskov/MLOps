@@ -7,10 +7,10 @@ name = "clickbait-classifier"
 version = "0.1.0"
 description = "A clickbait detection classifier using transformers"
 authors = [
-  {name = Julia Melina Jones Borgund},
-  {name = Kaja Hovinbøle},
-  {name = Poul Guo Skov},
-  {name = Yannick Brot Christensen}
+  { name = "Julia Melina Jones Borgund" },
+  { name = "Kaja Hovinbøle" },
+  { name = "Poul Guo Skov" },
+  { name = "Yannick Brot Christensen" }
 ]
 readme = "README.md"
 requires-python = ">=3.13"
