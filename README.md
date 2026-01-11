@@ -62,3 +62,12 @@ docker compose up api
 ```bash
 docker compose down
 ```
+
+
+
+## Profiling
+Run training with profiling enabled. This profiles only the first batch of the first epoch.
+
+```bash
+uv run python src/clickbait_classifier/train.py --profile
+```
