@@ -123,7 +123,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+19
 
 ### Question 2
 
@@ -135,7 +135,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+s221337, s253737, s253736, s224193
 
 ### Question 3
 
@@ -584,14 +584,3 @@ will check the repositories and the code to verify your answers.
 > _We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code._
 > Answer:
 
-fewafewubaofewnafioewnifowf ewafw afew afewafewafionewoanf waf ewonfieownaf fewnaiof newio fweanøf wea fewa
-fweafewa fewiagonwa ognwra'g
-wa
-gwreapig ipweroang w rag
-wa grwa
-g
-ew
-gwea g
-ew ag ioreabnguorwa bg̈́aw
-wa
-gew4igioera giroeahgi0wra gwa
