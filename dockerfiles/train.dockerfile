@@ -5,6 +5,7 @@ ENV PYTHONPATH=/app/src
 
 COPY uv.lock uv.lock
 COPY pyproject.toml pyproject.toml
+COPY README.md README.md
 
 RUN apt update && \
     apt install --no-install-recommends -y build-essential gcc && \
