@@ -25,3 +25,49 @@ We haven't fully decided on our approach yet. Options we're considering:
 Model candidates include `distilbert-base-uncased` (fast, good enough), `bert-base-uncased` (standard choice), or potentially something smaller if inference speed matters for deployment.
 
 We'll track experiments in W&B and let the results guide our final choice. The priority is getting the pipeline working end-to-end, not squeezing out the last percentage of accuracy.
+
+
+# How to run
+
+## Docker
+
+This project uses Docker and Docker Compose to run the training and API
+in a reproducible environment.
+
+### Prerequisites
+- Docker Desktop installed and running
+
+---
+
+### Build Docker images
+From the repository root:
+
+```bash
+docker build -f dockerfiles/api.dockerfile -t clickbait-api .
+docker build -f dockerfiles/train.dockerfile -t clickbait-train .
+```
+
+### Run API
+- Starts the api dockerfile:
+
+```bash
+docker compose up api
+```
+The API will be available at:
+	•	http://localhost:8000/docs
+
+Stop with Ctrl+C.
+
+### Run training
+- Runs the training container once and exits:
+
+```bash
+docker compose run --rm train
+```
+
+### Run all services
+- Starts both the API and training services:
+
+```bash
+docker compose up
+```

@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  api:
+    image: clickbait-api
+    container_name: clickbait-api
+    ports:
+      - "8000:8000"
+
+  train:
+    image: clickbait-train
+    container_name: clickbait-train
