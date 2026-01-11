@@ -23,19 +23,6 @@ def test(ctx: Context) -> None:
     ctx.run("uv run coverage run -m pytest tests/", echo=True, pty=not WINDOWS)
     ctx.run("uv run coverage report -m -i", echo=True, pty=not WINDOWS)
 
-@task
-def docker_build(ctx: Context, progress: str = "plain") -> None:
-    """Build docker images."""
-    ctx.run(
-        f"docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress}",
-        echo=True,
-        pty=not WINDOWS
-    )
-    ctx.run(
-        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}",
-        echo=True,
-        pty=not WINDOWS
-    )
 
 @task
 def docker_up(ctx: Context, service: str = "") -> None:
@@ -43,6 +30,15 @@ def docker_up(ctx: Context, service: str = "") -> None:
     if service:
         cmd += f" {service}"
     ctx.run(cmd, echo=True, pty=not WINDOWS)
+
+@task
+def docker_train(ctx: Context, args: str = "") -> None:
+    """Run training (optionally with Typer args)."""
+    ctx.run(
+        f'docker compose run --rm --build train {args}',
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 # Documentation commands
 @task

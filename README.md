@@ -37,29 +37,28 @@ in a reproducible environment.
 
 ### Prerequisites
 - Docker Desktop installed and running
-
+- - Python + uv (for `invoke` tasks)
 ---
 
+### Development container (recommended)
+Start a persistent development container (runs in the background):
+
+```bash
+docker compose up -d dev
+```
+
+### Run training
+
+```bash
+uv run invoke docker-train --args="--epochs x --batch-size x --lr x"
+```
+
 ### Run API
-Builds the image (if needed) and starts the API service:
-
 ```bash
-uv run invoke docker-up api
+docker compose up api
 ```
 
-The API will be available at: http://localhost:8000/docs
-Stop with Ctrl+C.
-
-## Run training
-Builds the image (if needed), runs the training container once, and exits:
-
+### Stop all containers when finished
 ```bash
-docker compose run --rm --build train
-```
-
-## Run all services
-Builds images (if needed) and starts both the API and training services:
-
-```bash
-uv run invoke docker-up
+docker compose down
 ```

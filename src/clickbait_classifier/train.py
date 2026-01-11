@@ -35,6 +35,7 @@ def train(
     val_loader = DataLoader(val_set, batch_size=batch_size)
 
     print(f"Train: {len(train_set)}, Val: {len(val_set)}, Test: {len(test_set)}")
+    print(f"Number of epochs: {epochs}, Batch size: {batch_size}, Learning rate: {lr}")
 
     # Model
     model = ClickbaitClassifier().to(device)

@@ -1,14 +1,28 @@
 version: "3.9"
 
 services:
+  dev:
+    build:
+      context: .
+      dockerfile: dockerfiles/train.dockerfile
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./src:/app/src
+    command: ["sh", "-lc", "sleep infinity"]
+    tty: true
+  train:
+    build:
+      context: .
+      dockerfile: dockerfiles/train.dockerfile
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    command: ["train"]
+
   api:
     build:
       context: .
       dockerfile: dockerfiles/api.dockerfile
     ports:
       - "8000:8000"
-
-  train:
-    build:
-      context: .
-      dockerfile: dockerfiles/train.dockerfile
