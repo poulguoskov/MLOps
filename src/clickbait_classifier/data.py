@@ -1,13 +1,23 @@
+import logging
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Optional
 
 import pandas as pd
 import torch
 import typer
+from hydra import compose, initialize_config_dir
+from omegaconf import OmegaConf
 from torch.utils.data import Dataset, TensorDataset
 from transformers import AutoTokenizer
 
 app = typer.Typer()
+log = logging.getLogger(__name__)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 
 class ClickbaitDataset(Dataset):
@@ -23,6 +33,20 @@ class ClickbaitDataset(Dataset):
 
     def __getitem__(self, index: int) -> tuple[str, torch.Tensor]:
         return self.headlines[index], self.labels[index]
+
+
+def _load_config(config_path: Optional[Path]) -> OmegaConf:
+    """Load configuration from file using Hydra."""
+    if config_path is None:
+        config_path = Path("configs/config.yaml")
+
+    config_path = Path(config_path).resolve()
+    config_dir = config_path.parent
+    config_name = config_path.stem
+
+    with initialize_config_dir(config_dir=str(config_dir), version_base=None):
+        cfg = compose(config_name=config_name)
+    return cfg
 
 
 def load_data(
@@ -54,21 +78,68 @@ def load_data(
 
 @app.command()
 def preprocess(
-    raw_path: Annotated[Path, typer.Option(help="Path to raw CSV")] = Path("data/raw/clickbait_data.csv"),
-    output_path: Annotated[Path, typer.Option("--output", "-o", help="Output directory")] = Path("data/processed"),
-    model_name: Annotated[str, typer.Option(help="Tokenizer model name")] = "distilbert-base-uncased",
-    max_length: Annotated[int, typer.Option(help="Max sequence length")] = 128,
-    train_split: Annotated[float, typer.Option(help="Train split ratio")] = 0.7,
-    val_split: Annotated[float, typer.Option(help="Validation split ratio")] = 0.15,
+    config: Annotated[
+        Optional[Path],
+        typer.Option("--config", "-c", help="Path to configuration file"),
+    ] = None,
+    raw_path: Annotated[
+        Optional[Path],
+        typer.Option(help="Path to raw CSV (overrides config)"),
+    ] = None,
+    output_path: Annotated[
+        Optional[Path],
+        typer.Option("--output", "-o", help="Output directory (overrides config)"),
+    ] = None,
+    model_name: Annotated[
+        Optional[str],
+        typer.Option(help="Tokenizer model name (overrides config)"),
+    ] = None,
+    max_length: Annotated[
+        Optional[int],
+        typer.Option(help="Max sequence length (overrides config)"),
+    ] = None,
+    train_split: Annotated[
+        Optional[float],
+        typer.Option(help="Train split ratio (overrides config)"),
+    ] = None,
+    val_split: Annotated[
+        Optional[float],
+        typer.Option(help="Validation split ratio (overrides config)"),
+    ] = None,
 ) -> None:
     """Tokenize raw data and save train/val/test splits as tensors."""
-    print(f"Loading data from {raw_path}")
+    # Load configuration
+    cfg = _load_config(config)
+
+    # Override config with CLI arguments (CLI takes precedence)
+    if raw_path is not None:
+        cfg.data.raw_path = str(raw_path)
+    if output_path is not None:
+        cfg.data.output_path = str(output_path)
+    if model_name is not None:
+        cfg.data.tokenizer_model_name = model_name
+    if max_length is not None:
+        cfg.data.max_length = max_length
+    if train_split is not None:
+        cfg.data.train_split = train_split
+    if val_split is not None:
+        cfg.data.val_split = val_split
+
+    raw_path = Path(cfg.data.raw_path)
+    output_path = Path(cfg.data.output_path)
+    model_name = cfg.data.tokenizer_model_name
+    max_length = cfg.data.max_length
+    train_split = cfg.data.train_split
+    val_split = cfg.data.val_split
+    random_state = cfg.data.random_state
+
+    log.info(f"Loading data from {raw_path}")
     df = pd.read_csv(raw_path)
-    print(f"Loaded {len(df)} samples")
-    print(f"Clickbait: {df['clickbait'].sum()}, Non-clickbait: {(df['clickbait'] == 0).sum()}")
+    log.info(f"Loaded {len(df)} samples")
+    log.info(f"Clickbait: {df['clickbait'].sum()}, Non-clickbait: {(df['clickbait'] == 0).sum()}")
 
     # Shuffle the data
-    df = df.sample(frac=1, random_state=42).reset_index(drop=True)
+    df = df.sample(frac=1, random_state=random_state).reset_index(drop=True)
 
     # Split indices
     n = len(df)
@@ -79,10 +150,10 @@ def preprocess(
     val_df = df[train_end:val_end]
     test_df = df[val_end:]
 
-    print(f"Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}")
+    log.info(f"Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}")
 
     # Tokenize
-    print(f"Tokenizing with {model_name}...")
+    log.info(f"Tokenizing with {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     output_path.mkdir(parents=True, exist_ok=True)
@@ -103,7 +174,7 @@ def preprocess(
         }
 
         torch.save(data, output_path / f"{split_name}.pt")
-        print(f"Saved {split_name}.pt with shape {encodings['input_ids'].shape}")
+        log.info(f"Saved {split_name}.pt with shape {encodings['input_ids'].shape}")
 
 
 if __name__ == "__main__":

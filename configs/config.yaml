@@ -1,0 +1,53 @@
+# Clickbait Classifier Configuration
+# This config file contains all hyperparameters for model, training, and data preprocessing
+
+# Model hyperparameters
+model:
+  model_name: "distilbert-base-uncased"
+  num_labels: 2
+  dropout: 0.1
+
+# Training hyperparameters
+training:
+  epochs: 3
+  batch_size: 32
+  lr: 2.0e-5
+  device: "auto"  # Options: auto, cpu, cuda, mps
+  seed: 42  # Random seed for reproducibility
+  
+  # Optimizer configuration
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: ${training.lr}  # Will be overridden by training.lr
+    weight_decay: 0.01
+  
+  # Loss function
+  loss:
+    _target_: torch.nn.CrossEntropyLoss
+  
+  # DataLoader settings
+  shuffle: true
+
+# Data preprocessing hyperparameters
+data:
+  # Paths
+  raw_path: "data/raw/clickbait_data.csv"
+  processed_path: "data/processed"
+  output_path: "data/processed"
+  
+  # Tokenizer settings
+  tokenizer_model_name: "distilbert-base-uncased"
+  max_length: 128
+  
+  # Data splitting
+  train_split: 0.7
+  val_split: 0.15
+  # test_split is implicitly: 1.0 - train_split - val_split = 0.15
+  
+  # Reproducibility
+  random_state: 42
+
+# Paths for outputs
+paths:
+  model_output: "models/clickbait_model.pt"
+  config_output: "models/config.yaml"  # Where to save config when saving model
