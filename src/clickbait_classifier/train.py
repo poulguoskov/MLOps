@@ -142,6 +142,7 @@ def train(
         f"Batch size: {cfg.training.batch_size}, "
         f"Learning rate: {cfg.training.lr}"
     )
+    weight_decay = getattr(getattr(cfg.training, "optimizer", None), "weight_decay", 0.0)
 
     # Initialize Lightning model
     logger.info(f"Initializing model: {cfg.model.model_name}")
@@ -150,7 +151,7 @@ def train(
         num_labels=cfg.model.num_labels,
         dropout=cfg.model.dropout,
         lr=cfg.training.lr,
-        weight_decay=cfg.training.optimizer.weight_decay,
+        weight_decay=weight_decay,
     )
 
     # Callbacks
