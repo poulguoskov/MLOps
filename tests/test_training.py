@@ -7,7 +7,6 @@ from torch import nn
 from torch.utils.data import TensorDataset
 
 import clickbait_classifier.train as train_module
-import clickbait_classifier.model as model_module
 
 
 class DummyTransformer(nn.Module):
