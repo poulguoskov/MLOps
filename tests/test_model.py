@@ -1,8 +1,10 @@
-import clickbait_classifier.model as model_module
 import pytest
 import torch
-from clickbait_classifier.model import ClickbaitClassifier
 from torch import nn
+
+import clickbait_classifier.model as model_module
+from clickbait_classifier.model import ClickbaitClassifier
+from clickbait_classifier.lightning_module import ClickbaitLightningModule
 
 
 class DummyTransformer(nn.Module):
@@ -41,3 +43,36 @@ def test_model_forward_output_shape(batch_size: int, seq_len: int):
 
     assert logits.shape == (batch_size, 2), "Expected logits shape [B, num_labels]"
     assert logits.dtype.is_floating_point, "Logits should be floating point"
+
+
+@pytest.mark.usefixtures("patch_transformer")
+def test_lightning_module_forward():
+    """Test that LightningModule wraps model correctly."""
+    model = ClickbaitLightningModule(num_labels=2, dropout=0.0, lr=1e-5)
+    model.eval()
+
+    batch_size, seq_len = 4, 32
+    input_ids = torch.randint(0, 1000, (batch_size, seq_len))
+    attention_mask = torch.ones((batch_size, seq_len), dtype=torch.long)
+
+    with torch.no_grad():
+        logits = model(input_ids, attention_mask)
+
+    assert logits.shape == (batch_size, 2), "Expected logits shape [B, num_labels]"
+
+
+@pytest.mark.usefixtures("patch_transformer")
+def test_lightning_module_training_step():
+    """Test that training_step returns a loss."""
+    model = ClickbaitLightningModule(num_labels=2, dropout=0.0, lr=1e-5)
+
+    batch_size, seq_len = 4, 32
+    input_ids = torch.randint(0, 1000, (batch_size, seq_len))
+    attention_mask = torch.ones((batch_size, seq_len), dtype=torch.long)
+    labels = torch.randint(0, 2, (batch_size,))
+
+    batch = (input_ids, attention_mask, labels)
+    loss = model.training_step(batch, batch_idx=0)
+
+    assert isinstance(loss, torch.Tensor), "training_step should return a tensor"
+    assert loss.shape == (), "Loss should be a scalar"
