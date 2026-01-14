@@ -1,13 +1,14 @@
 from pathlib import Path
 from types import SimpleNamespace
 
-import clickbait_classifier.lightning_module as lightning_module
-import clickbait_classifier.model as model_module
-import clickbait_classifier.train as train_module
 import pytest
 import torch
 from torch import nn
 from torch.utils.data import TensorDataset
+
+import clickbait_classifier.lightning_module as lightning_module
+import clickbait_classifier.model as model_module
+import clickbait_classifier.train as train_module
 
 
 class DummyModel(nn.Module):

@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 import torch
-from clickbait_classifier.data import ClickbaitDataset, load_data
 
+from clickbait_classifier.data import ClickbaitDataset, load_data
 from tests import _PATH_DATA
 
 PROCESSED_DIR = Path(_PATH_DATA) / "processed"
