@@ -21,8 +21,6 @@ from clickbait_classifier.data import load_data
 from clickbait_classifier.lightning_module import ClickbaitLightningModule
 from clickbait_classifier.load_from_env_file import api_key
 from clickbait_classifier.utils import save_config
-from clickbait_classifier.model import ClickbaitClassifier
-
 
 app = typer.Typer()
 

@@ -1,0 +1,5 @@
+model_name: dummy
+num_labels: 2
+dropout: 0.0
+lr: 0.001
+weight_decay: 0.0
