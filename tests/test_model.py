@@ -1,8 +1,9 @@
-import clickbait_classifier.model as model_module
 import pytest
 import torch
-from clickbait_classifier.model import ClickbaitClassifier
 from torch import nn
+
+import clickbait_classifier.model as model_module
+from clickbait_classifier.model import ClickbaitClassifier
 
 
 class DummyTransformer(nn.Module):

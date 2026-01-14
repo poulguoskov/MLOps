@@ -1,10 +1,11 @@
 from pathlib import Path
 from types import SimpleNamespace
 
-import clickbait_classifier.train as train_module
 import torch
 from torch import nn
 from torch.utils.data import TensorDataset
+
+import clickbait_classifier.train as train_module
 
 
 class DummyModel(nn.Module):
