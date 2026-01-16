@@ -20,6 +20,7 @@ def train(ctx: Context, args: str = "") -> None:
     prefix = "PYTHONPATH=src "
     ctx.run(f"{prefix}uv run python src/{PROJECT_NAME}/train.py {args}", echo=True, pty=not WINDOWS)
 
+
 @task
 def test(ctx: Context) -> None:
     """Kjør tester med riktig path."""
@@ -37,17 +38,17 @@ def docker_up(ctx: Context, service: str = "") -> None:
     ctx.run(cmd, echo=True, pty=not WINDOWS)
 
 
-
 @task
 def docker_train(ctx: Context, args: str = "") -> None:
     """Kjør trening i Docker ved å bruke 'uv run' for å koble til riktig miljø."""
     # Vi bruker uv run slik at den finner loguru og de andre avhengighetene
     cmd = f"uv run python -m {PROJECT_NAME}.train {args}"
     ctx.run(
-        f"docker compose run --rm --entrypoint \"\" train {cmd}",
+        f'docker compose run --rm --entrypoint "" train {cmd}',
         echo=True,
         pty=not WINDOWS,
     )
+
 
 @task
 def docker_evaluate(ctx: Context) -> None:
@@ -88,6 +89,7 @@ def evaluate(ctx: Context) -> None:
 def build_api(c):
     """Bygg API-imaget ved å bruke docker compose."""
     c.run("docker compose build api")
+
 
 @task
 def run_api_docker(c):

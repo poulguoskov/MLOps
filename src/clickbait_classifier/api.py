@@ -1,7 +1,7 @@
-from http import HTTPStatus
-import os
 import glob
-from pathlib import Path
+import os
+from http import HTTPStatus
+
 import torch
 from fastapi import FastAPI
 from transformers import AutoTokenizer
@@ -24,8 +24,7 @@ async def startup_event():
 
     # 1. Finn alle modellfiler i alle undermapper av 'models'
     # Denne leter etter både .pt og .ckpt filer
-    list_of_files = glob.glob("models/**/*.ckpt", recursive=True) + \
-                    glob.glob("models/**/*.pt", recursive=True)
+    list_of_files = glob.glob("models/**/*.ckpt", recursive=True) + glob.glob("models/**/*.pt", recursive=True)
 
     if not list_of_files:
         raise FileNotFoundError("Ingen modellfiler funnet i 'models/' mappen!")
@@ -38,7 +37,7 @@ async def startup_event():
     # ... (resten av koden din før lasting)
 
     state_dict = torch.load(latest_file, map_location="cpu")
-    
+
     if "state_dict" in state_dict:
         raw_weights = state_dict["state_dict"]
         # Vi lager en ny dictionary der vi fjerner "model." fra starten av alle nøkler
@@ -46,7 +45,7 @@ async def startup_event():
         model.load_state_dict(clean_weights)
     else:
         model.load_state_dict(state_dict)
-        
+
     model.eval()
 
 
