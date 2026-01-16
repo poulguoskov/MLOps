@@ -1,5 +1,7 @@
 from http import HTTPStatus
-
+import os
+import glob
+from pathlib import Path
 import torch
 from fastapi import FastAPI
 from transformers import AutoTokenizer
@@ -16,15 +18,35 @@ tokenizer = None
 @app.on_event("startup")
 async def startup_event():
     global model, tokenizer
-    # Bruk samme modellnavn som i din ClickbaitClassifier
     model_name = "distilbert-base-uncased"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-    # Initialiser din modell og last vektene
     model = ClickbaitClassifier(model_name=model_name)
-    # Husk å bytte ut denne stien med din faktiske lagrede modell-fil
-    state_dict = torch.load("models/clickbait_model.pt", map_location="cpu")
-    model.load_state_dict(state_dict)
+
+    # 1. Finn alle modellfiler i alle undermapper av 'models'
+    # Denne leter etter både .pt og .ckpt filer
+    list_of_files = glob.glob("models/**/*.ckpt", recursive=True) + \
+                    glob.glob("models/**/*.pt", recursive=True)
+
+    if not list_of_files:
+        raise FileNotFoundError("Ingen modellfiler funnet i 'models/' mappen!")
+
+    # 2. Finn den nyeste filen basert på endringstidspunkt (mtime)
+    latest_file = max(list_of_files, key=os.path.getmtime)
+    print(f"Laster nyeste modell: {latest_file}")
+
+    # 3. Last vektene
+    # ... (resten av koden din før lasting)
+
+    state_dict = torch.load(latest_file, map_location="cpu")
+    
+    if "state_dict" in state_dict:
+        raw_weights = state_dict["state_dict"]
+        # Vi lager en ny dictionary der vi fjerner "model." fra starten av alle nøkler
+        clean_weights = {k.replace("model.", ""): v for k, v in raw_weights.items()}
+        model.load_state_dict(clean_weights)
+    else:
+        model.load_state_dict(state_dict)
+        
     model.eval()
 
 

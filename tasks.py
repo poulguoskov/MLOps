@@ -86,14 +86,13 @@ def evaluate(ctx: Context) -> None:
 
 @task
 def build_api(c):
-    """Bygg Docker-imaget for API-et."""
-    c.run("docker build -t clickbait-api -f dockerfiles/api.dockerfile .")
-
+    """Bygg API-imaget ved å bruke docker compose."""
+    c.run("docker compose build api")
 
 @task
 def run_api_docker(c):
-    """Kjør API-et inni en Docker-container."""
-    c.run("docker run -p 8000:8000 clickbait-api")
+    """Kjør API-et ved å bruke docker compose for å få med volumes og ny kode."""
+    c.run("docker compose up api")
 
 
 @task

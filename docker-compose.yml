@@ -20,8 +20,11 @@ services:
       - ./configs:/app/configs
 
   api:
-    build:
-      context: .
-      dockerfile: dockerfiles/api.dockerfile
-    ports:
-      - "8000:8000"
+      build:
+        context: .
+        dockerfile: dockerfiles/api.dockerfile
+      volumes:
+        - ./src:/app/src        # Dette gjør at koden din oppdateres live
+        - ./models:/app/models  # Dette gjør at den finner de tidsstemplede mappene
+      ports:
+        - "8000:8000"
