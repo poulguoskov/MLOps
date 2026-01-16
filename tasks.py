@@ -56,3 +56,21 @@ def build_docs(ctx: Context) -> None:
 def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run("uv run mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
+
+
+
+
+@task
+def dev_api(c):
+    """Start FastAPI-appen lokalt med reload."""
+    c.run("uv run uvicorn clickbait_classifier.api:app --reload")
+
+@task
+def build_api(c):
+    """Bygg Docker-imaget for API-et."""
+    c.run("docker build -t clickbait-api -f dockerfiles/api.dockerfile .")
+
+@task
+def run_api_docker(c):
+    """Kjør API-et inni en Docker-container."""
+    c.run("docker run -p 8000:8000 clickbait-api")

@@ -38,12 +38,130 @@ in a reproducible environment.
 - - Python + uv (for `invoke` tasks)
 ---
 
+
+
+### Commands
+
+## Project Setup
+Ensure your environment is synchronized before running any tasks:
+```bash
+uv sync
+```
+
+
+## Local development
+
+### Preprocess data
+
+```bash
+uv run invoke preprocess-data
+```
+
+### Train model locally
+```bash
+uv run invoke train
+```
+
+### Run tests
+```bash
+uv run invoke test
+```
+
+### Run AIP locally
+```bash
+uv run invoke dev-api
+```
+The API health check will be available at https://www.google.com/search?q=http://127.0.0.1:8000/
+
+
+
+
+# Docker Compose
+
+### Start Services
+```bash
+docker compose up --build
+```
+
+
+### Development Container
+Start a persistent development container:
+```bash
+docker compose up -d dev
+```
+
+### Run training in docker
+```bash
+uv run invoke docker-train --args="--config configs/config.yaml --epochs 5"
+```
+
+
+### Build API dockerimage
+```bash
+uv run invoke build-api
+```
+
+### Run API in docker
+```bash
+uv run invoke run-api-docker
+```
+
+### Stop all contrainers
+```bash
+docker compose down
+```
+
+
+
+# Profiling
+
+### training with profiling
+```bash
+uv run python src/clickbait_classifier/train.py --profile
+```
+
+# Documentation
+### Build documentation
+```bash
+uv run invoke build-docs
+```
+
+### Serve documentation
+```bash
+uv run invoke serve-docs
+```
+
+# Pre commits
+
+### Run all hooks
+```bash
+uv run pre-commit run --all-files
+```
+
+### Skip hooks
+```bash
+git commit -m "your commit message" --no-verify
+```
+
+
+
+
+
+### Preprocess data
+Runs the preprocessing pipeline from raw to processed data.
+
+```bash
+uv run invoke preprocess-data
+```
+
 ### Development container (recommended)
 Start a persistent development container (runs in the background):
 
 ```bash
 docker compose up -d dev
 ```
+
+
 
 ### Run training
 
