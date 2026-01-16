@@ -88,10 +88,10 @@ will check the repositories and the code to verify your answers.
 - [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21) - Kaja
 - [ ] Create a trigger workflow for automatically building your docker images (M21) - Kaja
 - [ ] Get your model training in GCP using either the Engine or Vertex AI (M21) - Kaja
-- [ ] Create a FastAPI application that can do inference using your model (M22) - Melina
+- [x] Create a FastAPI application that can do inference using your model (M22) - Melina
 - [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-- [ ] Write API tests for your application and setup continues integration for these (M24)
-- [ ] Load test your application (M24)
+- [ ] Write API tests for your application and setup continues integration for these (M24) - Melina
+- [ ] Load test your application (M24) - Melina
 - [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 - [ ] Create a frontend for your API (M26)
 
