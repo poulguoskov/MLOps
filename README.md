@@ -314,3 +314,35 @@ gcloud ai custom-jobs create \
 When the job is finished, the model (.ckpt) and the config file are automatically saved to our storage bucket.
 
 Bucket Path: gs://dtumlops-clickbait-data/models/
+
+
+
+## ☁️ Deployment (Cloud Run)
+
+Loading the model from GCS bucket
+
+1. Build and push image
+
+```bash
+docker buildx build --platform linux/amd64 \
+  -f dockerfiles/api_gcp.dockerfile \
+  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:v1 \
+  --push .
+
+```
+
+2. Deploy to cloud run
+
+```bash
+gcloud run deploy clickbait-api-gcp \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:v1 \
+  --region=europe-west1 \
+  --allow-unauthenticated \
+  --port=8000 \
+  --memory=4Gi \
+  --timeout=300
+
+```
+
+3. Test API
+https://<din-url>.run.app/docs

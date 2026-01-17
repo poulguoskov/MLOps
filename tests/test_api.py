@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
+
 from src.clickbait_classifier.api import app
-import pytest
 
 client = TestClient(app)
+
 
 def test_read_main():
     """Sjekker at root-endepunktet svarer."""
@@ -10,6 +11,7 @@ def test_read_main():
     assert response.status_code == 200
     # Tilpass denne meldingen til det API-et ditt faktisk returnerer
     assert response.json() == {"message": "OK", "status-code": 200}
+
 
 def test_predict_endpoint():
     with TestClient(app) as client:
