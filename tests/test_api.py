@@ -1,9 +1,9 @@
-from unittest.mock import MagicMock, patch
-
+import torch
+from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
+from src.clickbait_classifier.api import app
 
-from clickbait_classifier.api import app
-
+# Vi lager en TestClient uten 'with'-blokk her for de enkle testene
 client = TestClient(app)
 
 def test_read_main():
@@ -11,29 +11,24 @@ def test_read_main():
     assert response.status_code == 200
     assert response.json() == {"message": "OK", "status-code": 200}
 
-@patch("src.clickbait_classifier.api.torch.load")
-@patch("src.clickbait_classifier.api.os.path.getmtime")
-@patch("src.clickbait_classifier.api.glob.glob")
-@patch("src.clickbait_classifier.api.ClickbaitClassifier")
-@patch("src.clickbait_classifier.api.AutoTokenizer")
-def test_predict_endpoint(mock_tokenizer, mock_classifier, mock_glob, mock_mtime, mock_torch_load):
-    # 1. Simuler filsystem-sjekkene i api.py
-    mock_mtime.return_value = 123456789.0
-    mock_glob.return_value = ["models/fake_model.ckpt"]
+def test_predict_endpoint():
+    # Vi må "fylle" de globale variablene i api.py med mocks
+    # slik at de ikke er 'None' når testen kjører
+    mock_tokenizer = MagicMock()
+    mock_tokenizer.return_value = {
+        "input_ids": torch.tensor([[1, 2, 3]]), 
+        "attention_mask": torch.tensor([[1, 1, 1]])
+    }
+    
+    mock_model = MagicMock()
+    mock_model.return_value = torch.tensor([[0.1, 0.9]]) # Simulerer clickbait
 
-    # 2. Simuler at torch.load returnerer en state_dict (api.py linje 41)
-    mock_torch_load.return_value = {"state_dict": {"model.weight": [0.1]}}
-
-    # 3. Lag en "ordentlig" mock-modell som har .load_state_dict() og .eval()
-    mock_model_obj = MagicMock()
-    mock_classifier.return_value = mock_model_obj
-
-    # 4. Simuler at selve prediksjonen i /predict fungerer
-    # Dette sørger for at torch.argmax i api.py får noe å jobbe med
-    mock_model_obj.return_value = MagicMock()
-
-    with TestClient(app) as client:
-        # Nå kjører startup_event helt uten fil-tilgang!
+    # Vi patcher tokenizer og model inne i api.py modulen
+    with patch("src.clickbait_classifier.api.tokenizer", mock_tokenizer), \
+         patch("src.clickbait_classifier.api.model", mock_model):
+        
         response = client.post("/predict?text=Dette er en test")
+        
         assert response.status_code == 200
         assert "is_clickbait" in response.json()
+        assert response.json()["is_clickbait"] is True
