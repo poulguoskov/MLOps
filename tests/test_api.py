@@ -1,8 +1,6 @@
 from fastapi.testclient import TestClient
 
 from src.clickbait_classifier.api import app
-import pytest
-from unittest.mock import patch
 
 client = TestClient(app)
 
