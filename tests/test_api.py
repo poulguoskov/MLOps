@@ -1,3 +1,6 @@
+import glob
+
+import pytest
 from fastapi.testclient import TestClient
 
 from src.clickbait_classifier.api import app
@@ -13,6 +16,10 @@ def test_read_main():
     assert response.json() == {"message": "OK", "status-code": 200}
 
 
+@pytest.mark.skipif(
+    not (glob.glob("models/**/*.ckpt", recursive=True) or glob.glob("models/**/*.pt", recursive=True)),
+    reason="No model files found - skipping predict endpoint test",
+)
 def test_predict_endpoint():
     with TestClient(app) as client:
         response = client.post("/predict?text=Dette er en test")
