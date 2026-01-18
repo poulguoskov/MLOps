@@ -267,55 +267,38 @@ uv run pre-commit run --all-files
 git commit -m"your commit message" --no-verify
 ```
 
-
 ## Run training on Google Cloud Platform (GCP) Vertex AI
-Training on Google Cloud (Vertex AI)
-Follow these steps to train the model on Vertex AI using GPU.
 
-Prerequisites:
+Training on Google Cloud (Vertex AI) using GPU.
+
+### Prerequisites
 Make sure you have authenticated with Google Cloud:
+```bash
 gcloud auth login
-gcloud auth configure-docker europe-west1-docker.pkg.dev
+gcloud config set project dtumlops-484212
+```
 
-1. Build and Push Docker Image
+### Start Training Job
 
-First, build the Docker image and push it to the cloud. Important: Change the version tag (e.g., v5, v6) for every new build.
+The Docker image is automatically built and pushed to Artifact Registry when you push to `main` (via Cloud Build trigger).
 
-docker buildx build --platform linux/amd64 \
-  -f dockerfiles/train.dockerfile \
-  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/train:<YOUR_TAG> \
-  --push .
-
-  (Replace <YOUR_TAG> with your version, e.g., v6)
-
-2. Update Configuration
-
-Open configs/config_gpu.yaml and update the imageUri to match the tag you just pushed:
-
-# Example inside config_gpu.yaml
-imageUri: europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/train:<YOUR_TAG>
-
-3. Start Training Job
-
-Run this command to start the training on Vertex AI. The model will be saved directly to our Google Cloud Storage bucket.
-
+Run this command to start training on Vertex AI with GPU:
+```bash
 gcloud ai custom-jobs create \
   --region=europe-west1 \
-  --display-name=clickbait-train-run \
+  --display-name=clickbait-train \
   --config=configs/config_gpu.yaml \
-  --command=uv \
-  --args=run \
-  --args=-m \
-  --args=clickbait_classifier.train \
-  --args=--config=configs/config.yaml \
   --args=--processed-path=/gcs/dtumlops-clickbait-data/data/processed \
-  --args=--output=/gcs/dtumlops-clickbait-data/models
+  --args=--output=/gcs/dtumlops-clickbait-data/models \
+  --args=--epochs=3
+```
 
-When the job is finished, the model (.ckpt) and the config file are automatically saved to our storage bucket.
+Monitor the job:
+```bash
+gcloud ai custom-jobs stream-logs <JOB_NAME>
+```
 
-Bucket Path: gs://dtumlops-clickbait-data/models/
-
-
+When finished, the model and config are saved to: `gs://dtumlops-clickbait-data/models/`
 
 ## ☁️ Deployment (Cloud Run)
 

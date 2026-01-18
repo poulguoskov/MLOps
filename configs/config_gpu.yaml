@@ -5,4 +5,4 @@ workerPoolSpecs:
       acceleratorCount: 1
     replicaCount: 1
     containerSpec:
-      imageUri: europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/train:v5
+      imageUri: europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/clickbait-classifier:latest
