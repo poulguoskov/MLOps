@@ -90,10 +90,10 @@ will check the repositories and the code to verify your answers.
 - [x] Get your model training in GCP using either the Engine or Vertex AI (M21) - Kaja
 - [x] Create a FastAPI application that can do inference using your model (M22) - Melina
 - [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
-- [ ] Write API tests for your application and setup continues integration for these (M24) - Melina
+- [x] Write API tests for your application and setup continues integration for these (M24) - Melina
 - [ ] Load test your application (M24) - Melina
 - [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25) - Melina/Kaja
-- [ ] Create a frontend for your API (M26) - Kaja/Melina
+- [x] Create a frontend for your API (M26) - Kaja/Melina
 
 ### Week 3
 
@@ -613,6 +613,10 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 > Recommended answer length: 50-300 words.
 >
 > Example:
+Student s253737 was responsible for creating the API Docker file, training Docker file, and evaluation Docker file. s253737 implemented the FastAPI application for inference, developed the evaluation.py, set up the continuous integration workflow, added linting, created API tests, and configured CI for the API tests.
+
+All members contributed to the tasks.py, pyproject.toml, .gitignore, as they were updated continuously.
+
 > _Student sXXXXXX was in charge of developing of setting up the initial cookie cutter project and developing of the_
 > _docker containers for training our applications._
 > _Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards._
