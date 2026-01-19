@@ -16,4 +16,5 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 EXPOSE 8000
 
-ENTRYPOINT ["uv", "run", "uvicorn", "clickbait_classifier.api_gcp:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use dynamic PORT for Cloud Run compatibility (defaults to 8080)
+CMD ["sh", "-c", "uv run uvicorn clickbait_classifier.api_gcp:app --host 0.0.0.0 --port ${PORT:-8080}"]

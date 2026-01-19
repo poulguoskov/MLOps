@@ -356,30 +356,52 @@ When finished, the model and config are saved to: `gs://dtumlops-clickbait-data/
 
 ## ☁️ Deployment (Cloud Run)
 
-Loading the model from GCS bucket
+The API loads the model from GCS bucket on startup.
 
-1. Build and push image
+### 1. Build and push image
 
 ```bash
-docker buildx build --platform linux/amd64 \
-  -f dockerfiles/api_gcp.dockerfile \
-  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:v1 \
-  --push .
+docker build --platform linux/amd64 \
+  -t clickbait-api-gcp:latest \
+  -f dockerfiles/api_gcp.dockerfile .
 
+docker tag clickbait-api-gcp:latest \
+  europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:latest
+
+docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:latest
 ```
 
-2. Deploy to cloud run
+### 2. Deploy to Cloud Run
 
 ```bash
-gcloud run deploy clickbait-api-gcp \
-  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:v1 \
+gcloud run deploy clickbait-api \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:latest \
   --region=europe-west1 \
-  --allow-unauthenticated \
-  --port=8000 \
+  --platform=managed \
   --memory=4Gi \
-  --timeout=300
-
+  --cpu=2 \
+  --timeout=300 \
+  --cpu-boost
 ```
 
-3. Test API
-   https://<din-url>.run.app/docs
+### 3. Test API
+
+```bash
+# Health check
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+    https://clickbait-api-136485552734.europe-west1.run.app/
+
+# Classify single text
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+    -X POST https://clickbait-api-136485552734.europe-west1.run.app/classify \
+    -H "Content-Type: application/json" \
+    -d '{"text": "You Will NEVER Believe What Happened Next"}'
+
+# Batch classify
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+    -X POST https://clickbait-api-136485552734.europe-west1.run.app/classify/batch \
+    -H "Content-Type: application/json" \
+    -d '{"texts": ["Scientists publish research", "This ONE Trick Changes Everything"]}'
+```
+
+Interactive docs: https://clickbait-api-136485552734.europe-west1.run.app/docs
