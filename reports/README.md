@@ -252,7 +252,19 @@ Additionally, we implemented integration tests for the API and the training loop
 >
 > Answer:
 
---- question 8 fill here ---
+The total code coverage is 58%.
+
+Even if we reached 100%, we would not trust the code to be completely error-free since coverage measures which lines ran during testing, not whether the logic is actually correct.
+
+A program can have 100% coverage and still fail. Some examples could be:
+
+- Logical bugs: A function might run perfectly without crashing but still calculate the wrong result.
+
+- Edge cases: The code might crash on unexpected inputs (like empty files or null values) that we didn't include in the test data.
+
+- Weak tests: It is possible to write tests that execute the code but don't check if the output is actually correct.
+
+Therefore, coverage is useful for finding untested code, but it is not a guarantee that the system works perfectly.
 
 ### Question 9
 
@@ -266,11 +278,11 @@ Additionally, we implemented integration tests for the API and the training loop
 > _addition to the main branch. To merge code we ..._
 >
 > Answer:
-> Yes, our workflow includes the use of branches and pull requests. We work on separate feature branches when adding new functionality, instead of working directly on the main branch. This way we can develop and experiment without risking breaking the stable version of the project.
-> When a feature was ready, it was pushed to its branch and merged into main through a pull request. The pull request make it possible to review the changes, see which files are modified, and resolve merge conflicts in a controlled way before code was merged. This is useful when multiple group members worked on similar files.
-> Using branches and pull requests improves version control by keeping the main branch stable, making collaboration safer, and providing a clear history of changes and decisions made during development.
+Yes, our workflow includes the use of branches and pull requests. We work on separate feature branches when adding new functionality, instead of working directly on the main branch. This way we can develop and experiment without risking breaking the stable version of the project.
+When a feature was ready, it was pushed to its branch and merged into main through a pull request. The pull request make it possible to review the changes, see which files are modified, and resolve merge conflicts in a controlled way before code was merged. This is useful when multiple group members worked on similar files.
+Using branches and pull requests improves version control by keeping the main branch stable, making collaboration safer, and providing a clear history of changes and decisions made during development.
 
---- question 9 fill here ---
+
 
 ### Question 10
 
