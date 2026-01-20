@@ -501,3 +501,53 @@ PYTHONPATH=src uv run python scripts/benchmark_cloud.py \
   --url https://clickbait-api-onnx-136485552734.europe-west1.run.app \
   --requests 1000
 ```
+
+## 🍱 BentoML Service
+
+BentoML provides ML-optimized serving with adaptive batching.
+
+### Run locally
+
+```bash
+uv run bentoml serve src.clickbait_classifier.bentoml_service:ClickbaitClassifier
+```
+
+### Test endpoint
+
+```bash
+curl -X POST http://localhost:3000/classify \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["You Will NEVER Believe What Happened Next!"]}'
+```
+
+### Build and containerize
+
+```bash
+uv run bentoml build
+uv run bentoml containerize clickbait_classifier:latest --opt platform=linux/amd64
+```
+
+### Deploy to Cloud Run
+
+```bash
+docker tag clickbait_classifier:latest \
+  europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest
+docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest
+
+gcloud run deploy clickbait-bentoml \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest \
+  --region=europe-west1 \
+  --memory=2Gi \
+  --port=3000
+```
+
+Service URL: https://clickbait-bentoml-136485552734.europe-west1.run.app
+
+### Load test results (10 users, 30s)
+
+| Metric       | BentoML |
+| ------------ | ------- |
+| Requests/sec | 26.91   |
+| Mean latency | 111 ms  |
+| P95 latency  | 180 ms  |
+| Errors       | 0%      |
