@@ -91,7 +91,7 @@ will check the repositories and the code to verify your answers.
 - [x] Create a FastAPI application that can do inference using your model (M22) - Melina
 - [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
 - [x] Write API tests for your application and setup continues integration for these (M24) - Melina
-- [ ] Load test your application (M24) - Melina
+- [x] Load test your application (M24) - Melina&Poul
 - [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25) - Melina/Kaja
 - [x] Create a frontend for your API (M26) - Kaja/Melina
 
@@ -249,10 +249,9 @@ s221337, s253737, s253736, s224193
 > _addition to the main branch. To merge code we ..._
 >
 > Answer:
-Yes, our workflow includes the use of branches and pull requests. We work on separate feature branches when adding new functionality, instead of working directly on the main branch. This way we can develop and experiment without risking breaking the stable version of the project.
-When a feature was ready, it was pushed to its branch and merged into main through a pull request. The pull request make it possible to review the changes, see which files are modified, and resolve merge conflicts in a controlled way before code was merged. This is useful when multiple group members worked on similar files.
-Using branches and pull requests improves version control by keeping the main branch stable, making collaboration safer, and providing a clear history of changes and decisions made during development.
-
+> Yes, our workflow includes the use of branches and pull requests. We work on separate feature branches when adding new functionality, instead of working directly on the main branch. This way we can develop and experiment without risking breaking the stable version of the project.
+> When a feature was ready, it was pushed to its branch and merged into main through a pull request. The pull request make it possible to review the changes, see which files are modified, and resolve merge conflicts in a controlled way before code was merged. This is useful when multiple group members worked on similar files.
+> Using branches and pull requests improves version control by keeping the main branch stable, making collaboration safer, and providing a clear history of changes and decisions made during development.
 
 --- question 9 fill here ---
 
@@ -268,10 +267,9 @@ Using branches and pull requests improves version control by keeping the main br
 > _pipeline_
 >
 > Answer:
-No, we did not use DVC for managing data in this project. However, DVC would be beneficial in projects where datasets are large, change over time, or cannot be easily stored directly in Git. As it is described in the course material, DVC allows data to be versioned alongside code without placing the actual data files in the Git repository, instead storing them in external storage such as cloud buckets.
-This would be useful in machine learning workflows where data preprocessing, feature engineering, or dataset composition evolves during development. If we used DVC, it would be possible to reproduce experiments exactly by checking out a specific Git commit and pulling the corresponding data version.
-DVC can also help ensure consistency across team members and environments, and reduce errors caused by using different versions of the data. This improves reproducibility, collaboration, and traceability in ML projects.
-
+> No, we did not use DVC for managing data in this project. However, DVC would be beneficial in projects where datasets are large, change over time, or cannot be easily stored directly in Git. As it is described in the course material, DVC allows data to be versioned alongside code without placing the actual data files in the Git repository, instead storing them in external storage such as cloud buckets.
+> This would be useful in machine learning workflows where data preprocessing, feature engineering, or dataset composition evolves during development. If we used DVC, it would be possible to reproduce experiments exactly by checking out a specific Git commit and pulling the corresponding data version.
+> DVC can also help ensure consistency across team members and environments, and reduce errors caused by using different versions of the data. This improves reproducibility, collaboration, and traceability in ML projects.
 
 --- question 10 fill here ---
 
@@ -289,11 +287,11 @@ DVC can also help ensure consistency across team members and environments, and r
 > _here: <weblink>_
 >
 > Answer:
-We use GitHub Actions for continuous integration to automatically check the quality of our code. The CI workflow is triggered both on pull requests and on pushes to the main branch, which means that changes are checked before they are merged as well as after they are added to the main codebase. This helps us catch errors early and ensures that the main branch remains stable.
-Our CI setup includes both linting and unit testing. Linting is done using ruff, which checks for unused imports, formatting issues, and common Python errors. This helps keep the codebase clean and consistent, and prevents small mistakes from accumulating over time. In addition to linting, we use pytest for unit testing. The tests are used to verify that key parts of the project, such as data handling, model components, and training logic, work as expected.
-The workflow runs on multiple operating systems using a matrix configuration. We test the project on Ubuntu, macOS, and Windows, all using Python 3.13, to ensure that the code behaves consistently across different environments and platforms.
-Dependencies are installed using uv, which provides a fast and reproducible setup. By relying on uv together with GitHub Actions’ caching mechanisms, we avoid reinstalling all dependencies from scratch on every run, which reduces the overall CI runtime.
-We chose to keep the CI setup in a single workflow file, as this was sufficient for the size and complexity of our project while still covering the most important CI checks.
+> We use GitHub Actions for continuous integration to automatically check the quality of our code. The CI workflow is triggered both on pull requests and on pushes to the main branch, which means that changes are checked before they are merged as well as after they are added to the main codebase. This helps us catch errors early and ensures that the main branch remains stable.
+> Our CI setup includes both linting and unit testing. Linting is done using ruff, which checks for unused imports, formatting issues, and common Python errors. This helps keep the codebase clean and consistent, and prevents small mistakes from accumulating over time. In addition to linting, we use pytest for unit testing. The tests are used to verify that key parts of the project, such as data handling, model components, and training logic, work as expected.
+> The workflow runs on multiple operating systems using a matrix configuration. We test the project on Ubuntu, macOS, and Windows, all using Python 3.13, to ensure that the code behaves consistently across different environments and platforms.
+> Dependencies are installed using uv, which provides a fast and reproducible setup. By relying on uv together with GitHub Actions’ caching mechanisms, we avoid reinstalling all dependencies from scratch on every run, which reduces the overall CI runtime.
+> We chose to keep the CI setup in a single workflow file, as this was sufficient for the size and complexity of our project while still covering the most important CI checks.
 
 --- question 11 fill here ---
 
@@ -360,11 +358,10 @@ We chose to keep the CI setup in a single workflow file, as this was sufficient 
 > _training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>_
 >
 > Answer:
-In our project, Docker was used to containerize parts of the machine learning pipeline to make the project easier to run and reproduce across different machines. We created separate Docker images for training, evaluation, and the API. This allowed us to isolate each task and ensure that everyone in the group could run the same code with the same dependencies, independent of their local environment.
-The training image is used to train the model and save the trained weights to a shared folder. The evaluation image loads these saved weights and evaluates the model on validation or test data, storing the results as a JSON file. The API image runs a FastAPI application using Uvicorn, which exposes an endpoint for making predictions with the trained model.
+> In our project, Docker was used to containerize parts of the machine learning pipeline to make the project easier to run and reproduce across different machines. We created separate Docker images for training, evaluation, and the API. This allowed us to isolate each task and ensure that everyone in the group could run the same code with the same dependencies, independent of their local environment.
+> The training image is used to train the model and save the trained weights to a shared folder. The evaluation image loads these saved weights and evaluates the model on validation or test data, storing the results as a JSON file. The API image runs a FastAPI application using Uvicorn, which exposes an endpoint for making predictions with the trained model.
 
 #husk å legge til kommandoer og link når det er klart.
-
 
 --- question 15 fill here ---
 
@@ -380,11 +377,10 @@ The training image is used to train the model and save the trained weights to a 
 > _run of our main code at some point that showed ..._
 >
 > Answer:
-When running into bugs during our experiments, we used a combination of systematic debugging and incremental testing. We used error messages and stack traces to identify where failures occurred, for example when dependencies were missing, paths were incorrect, or the Docker environment did not match the local setup.
-We also used the Git history and branches to revert or compare changes when new bugs were introduced, which made it easier to identify the source of errors.
+> When running into bugs during our experiments, we used a combination of systematic debugging and incremental testing. We used error messages and stack traces to identify where failures occurred, for example when dependencies were missing, paths were incorrect, or the Docker environment did not match the local setup.
+> We also used the Git history and branches to revert or compare changes when new bugs were introduced, which made it easier to identify the source of errors.
 
 #husk å legge til profiling of code
-
 
 --- question 16 fill here ---
 
@@ -437,7 +433,6 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 >
 > Answer:
 
-
 ### Question 20
 
 > **Upload 1-2 images of your GCP artifact registry, such that we can see the different docker images that you have**
@@ -447,7 +442,6 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 
 ![Artifact Registry showing Docker images used in the project](figures/artifact_reg.png)
 ![Image digests and tags for the training container](figures/artifact_tags.png)
-
 
 ### Question 21
 
@@ -519,7 +513,16 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 >
 > Answer:
 
---- question 25 fill here ---
+For unit testing of the API, we used pytest with FastAPI's TestClient. We wrote 5 tests covering the health endpoint, single classification, batch classification, clickbait detection accuracy, and input validation (missing text returns 422).
+
+For load testing, we used locust. We created a locustfile that simulates realistic user behavior with weighted tasks: health checks (weight 1), single classification (weight 5), and batch classification (weight 2). Running with 10 concurrent users locally, the API achieved:
+
+- Average response time: 23ms
+- 99th percentile: 150ms
+- Throughput: 4.7 requests/second
+- Failure rate: 0.72% (1 failure in 139 requests due to a tokenizer concurrency issue under heavy load)
+
+The load test identified a potential thread-safety issue with the tokenizer when handling concurrent batch requests, which is a known limitation for local development but not critical for the Cloud Run deployment which handles requests sequentially.
 
 ### Question 26
 
@@ -613,7 +616,7 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 > Recommended answer length: 50-300 words.
 >
 > Example:
-Student s253737 was responsible for creating the API Docker file, training Docker file, and evaluation Docker file. s253737 implemented the FastAPI application for inference, developed the evaluation.py, set up the continuous integration workflow, added linting, created API tests, and configured CI for the API tests.
+> Student s253737 was responsible for creating the API Docker file, training Docker file, and evaluation Docker file. s253737 implemented the FastAPI application for inference, developed the evaluation.py, set up the continuous integration workflow, added linting, created API tests, and configured CI for the API tests.
 
 All members contributed to the tasks.py, pyproject.toml, .gitignore, as they were updated continuously.
 
