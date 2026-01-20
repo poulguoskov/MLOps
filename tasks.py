@@ -149,3 +149,15 @@ print(f'Staged: {{art.qualified_name}}')"''',
         echo=True,
         pty=not WINDOWS,
     )
+
+
+@task
+def load_test(ctx: Context, users: int = 10, spawn_rate: int = 2, duration: str = "30s") -> None:
+    """Run load tests with locust. Requires API running separately."""
+    ctx.run(
+        f"uv run locust -f tests/performancetests/locustfile.py "
+        f"--headless --users {users} --spawn-rate {spawn_rate} "
+        f"--run-time {duration} --host http://localhost:8000",
+        echo=True,
+        pty=not WINDOWS,
+    )
