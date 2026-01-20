@@ -443,3 +443,116 @@ gcloud run deploy clickbait-frontend \
 ```
 
 After deployment, click the URL provided in the terminal to open the app.
+
+## ONNX Deployment (Lightweight)
+
+ONNX provides a lighter-weight alternative to PyTorch for deployment.
+
+### Benefits
+
+| Metric          | PyTorch | ONNX   |
+| --------------- | ------- | ------ |
+| Docker image    | 4.27 GB | 568 MB |
+| Model file      | 759 MB  | 266 MB |
+| Memory required | 4 Gi    | 2 Gi   |
+| CPU required    | 2       | 1      |
+
+### Export model to ONNX
+```bash
+PYTHONPATH=src uv run python scripts/export_onnx.py
+```
+
+### Run ONNX API locally
+```bash
+# Start API
+PYTHONPATH=src uv run uvicorn clickbait_classifier.api_onnx:app --reload --port 8001
+
+# Test
+curl -X POST http://localhost:8001/classify \
+  -H "Content-Type: application/json" \
+  -d '{"text": "You Will NEVER Believe What Happened Next!"}'
+```
+
+### Deploy ONNX to Cloud Run
+```bash
+# Build and push
+docker build -f dockerfiles/api_onnx_gcp.dockerfile \
+  --platform linux/amd64 \
+  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-onnx:latest .
+
+docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-onnx:latest
+
+# Deploy (note: less resources needed)
+gcloud run deploy clickbait-api-onnx \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-onnx:latest \
+  --region=europe-west1 \
+  --platform=managed \
+  --memory=2Gi \
+  --cpu=1 \
+  --timeout=300
+```
+
+### Benchmark comparison (1000 requests)
+
+| Metric         | ONNX   | PyTorch   |
+| -------------- | ------ | --------- |
+| Mean latency   | 349 ms | 284 ms    |
+| Median latency | 327 ms | 219 ms    |
+| P95 latency    | 450 ms | 264 ms    |
+| Max latency    | 710 ms | 61,835 ms |
+| Requests/sec   | 2.87   | 3.52      |
+
+PyTorch is faster but ONNX is more consistent (no cold-start spikes) and uses half the resources.
+
+### Run cloud benchmark
+```bash
+PYTHONPATH=src uv run python scripts/benchmark_cloud.py \
+  --url https://clickbait-api-onnx-136485552734.europe-west1.run.app \
+  --requests 1000
+```
+
+## BentoML Service
+
+BentoML provides ML-optimized serving with adaptive batching.
+
+### Run locally
+```bash
+uv run bentoml serve src.clickbait_classifier.bentoml_service:ClickbaitClassifier
+```
+
+### Test endpoint
+```bash
+curl -X POST http://localhost:3000/classify \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["You Will NEVER Believe What Happened Next!"]}'
+```
+
+### Build and containerize
+```bash
+uv run bentoml build
+uv run bentoml containerize clickbait_classifier:latest --opt platform=linux/amd64
+```
+
+### Deploy to Cloud Run
+```bash
+docker tag clickbait_classifier:latest \
+  europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest
+docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest
+
+gcloud run deploy clickbait-bentoml \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest \
+  --region=europe-west1 \
+  --memory=2Gi \
+  --port=3000
+```
+
+Service URL: https://clickbait-bentoml-136485552734.europe-west1.run.app
+
+### Load test results (10 users, 30s)
+
+| Metric       | BentoML |
+| ------------ | ------- |
+| Requests/sec | 26.91   |
+| Mean latency | 111 ms  |
+| P95 latency  | 180 ms  |
+| Errors       | 0%      |
