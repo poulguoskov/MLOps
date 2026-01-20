@@ -150,7 +150,11 @@ s221337, s253737, s253736, s224193
 >
 > Answer:
 
---- question 3 fill here ---
+We used the third-party framework Hugging Face Transformers library in our project to handle natural language processing.
+
+We used the AutoModel functionality to load a pre-trained distilbert model as our feature extractor. Instead of training a model from scratch, we integrated this pre-trained transformer into our custom ClickbaitClassifier class and added a simple linear classification layer (nn.Linear) on top of it.
+
+This framework helped us complete the project by allowing us to leverage transfer learning. Since training an NLP model from scratch requires massive datasets and compute power, using Transformers allowed us to achieve good performance quickly. This saved us development time, which made us able to focus on learning MLOps from the course.
 
 ## Coding environment
 
