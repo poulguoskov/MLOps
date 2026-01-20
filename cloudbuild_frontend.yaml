@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'dockerfiles/frontend_light.dockerfile', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/container-reg/frontend:light', '.']
+images:
+- 'europe-west1-docker.pkg.dev/$PROJECT_ID/container-reg/frontend:light'

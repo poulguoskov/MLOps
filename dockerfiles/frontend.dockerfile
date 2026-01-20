@@ -10,6 +10,5 @@ COPY src/ src/
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
-EXPOSE 8501
-
-ENTRYPOINT ["uv", "run", "streamlit", "run", "src/clickbait_classifier/frontend.py", "--server.port=8501", "--server.address=0.0.0.0"]
+EXPOSE 8080
+CMD ["sh", "-c", "uv run streamlit run src/clickbait_classifier/frontend.py --server.port=${PORT:-8080} --server.address=0.0.0.0"]
