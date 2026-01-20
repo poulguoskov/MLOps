@@ -214,7 +214,7 @@ This single command reads the lock file and installs both production and develop
 >
 > Answer:
 
---- question 6 fill here ---
+
 
 ## Version control
 
@@ -232,6 +232,10 @@ This single command reads the lock file and installs both production and develop
 > _application but also ... ._
 >
 > Answer:
+
+In total we have implemented 27 tests. Primarily we are testing data integrity to ensure that our input tensors have the correct shape and that labels are valid. We are also testing the model architecture to verify that the forward pass works without errors and produces outputs of the correct dimension.
+
+Additionally, we implemented integration tests for the API and the training loop to ensure that the different components of the pipeline interact correctly, though some of these require specific environments to run.
 
 --- question 7 fill here ---
 
