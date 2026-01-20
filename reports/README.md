@@ -296,11 +296,10 @@ Using branches and pull requests improves version control by keeping the main br
 > _pipeline_
 >
 > Answer:
-> No, we did not use DVC for managing data in this project. However, DVC would be beneficial in projects where datasets are large, change over time, or cannot be easily stored directly in Git. As it is described in the course material, DVC allows data to be versioned alongside code without placing the actual data files in the Git repository, instead storing them in external storage such as cloud buckets.
-> This would be useful in machine learning workflows where data preprocessing, feature engineering, or dataset composition evolves during development. If we used DVC, it would be possible to reproduce experiments exactly by checking out a specific Git commit and pulling the corresponding data version.
-> DVC can also help ensure consistency across team members and environments, and reduce errors caused by using different versions of the data. This improves reproducibility, collaboration, and traceability in ML projects.
+No, we did not use DVC for managing data in this project. However, DVC would be beneficial in projects where datasets are large, change over time, or cannot be easily stored directly in Git. As it is described in the course material, DVC allows data to be versioned alongside code without placing the actual data files in the Git repository, instead storing them in external storage such as cloud buckets.
+This would be useful in machine learning workflows where data preprocessing, feature engineering, or dataset composition evolves during development. If we used DVC, it would be possible to reproduce experiments exactly by checking out a specific Git commit and pulling the corresponding data version.
+DVC can also help ensure consistency across team members and environments, and reduce errors caused by using different versions of the data. This improves reproducibility, collaboration, and traceability in ML projects.
 
---- question 10 fill here ---
 
 ### Question 11
 
@@ -316,13 +315,16 @@ Using branches and pull requests improves version control by keeping the main br
 > _here: <weblink>_
 >
 > Answer:
-> We use GitHub Actions for continuous integration to automatically check the quality of our code. The CI workflow is triggered both on pull requests and on pushes to the main branch, which means that changes are checked before they are merged as well as after they are added to the main codebase. This helps us catch errors early and ensures that the main branch remains stable.
-> Our CI setup includes both linting and unit testing. Linting is done using ruff, which checks for unused imports, formatting issues, and common Python errors. This helps keep the codebase clean and consistent, and prevents small mistakes from accumulating over time. In addition to linting, we use pytest for unit testing. The tests are used to verify that key parts of the project, such as data handling, model components, and training logic, work as expected.
-> The workflow runs on multiple operating systems using a matrix configuration. We test the project on Ubuntu, macOS, and Windows, all using Python 3.13, to ensure that the code behaves consistently across different environments and platforms.
-> Dependencies are installed using uv, which provides a fast and reproducible setup. By relying on uv together with GitHub Actions’ caching mechanisms, we avoid reinstalling all dependencies from scratch on every run, which reduces the overall CI runtime.
-> We chose to keep the CI setup in a single workflow file, as this was sufficient for the size and complexity of our project while still covering the most important CI checks.
 
---- question 11 fill here ---
+We use GitHub Actions for continuous integration to automatically check the quality of our code. The CI workflow is triggered both on pull requests and on pushes to the main branch, which means that changes are checked before they are merged as well as after they are added to the main codebase. This helps us catch errors early and ensures that the main branch remains stable.
+
+Our CI setup includes both linting and unit testing. Linting is done using ruff, which checks for unused imports, formatting issues, and common Python errors. This helps keep the codebase clean and consistent, and prevents small mistakes from accumulating over time. In addition to linting, we use pytest for unit testing. The tests are used to verify that key parts of the project, such as data handling, model components, and training logic, work as expected.
+
+The workflow runs on multiple operating systems using a matrix configuration. We test the project on Ubuntu, macOS, and Windows, all using Python 3.13, to ensure that the code behaves consistently across different environments and platforms.
+
+Dependencies are installed using uv, which provides a fast and reproducible setup. By relying on uv together with GitHub Actions’ caching mechanisms, we avoid reinstalling all dependencies from scratch on every run, which reduces the overall CI runtime.
+
+We chose to keep the CI setup in a single workflow file, as this was sufficient for the size and complexity of our project while still covering the most important CI checks.
 
 ## Running code and tracking experiments
 
@@ -341,7 +343,13 @@ Using branches and pull requests improves version control by keeping the main br
 >
 > Answer:
 
---- question 12 fill here ---
+We used Hydra to manage configurations. Our setup relies on a config file (configs/config.yaml), where we define hyperparameters and use Hydra for variable interpolation and object instantiation.
+
+To run an experiment, we utilize a CLI wrapper that allows us to load a base config and override specific parameters using standard flags. For example:
+
+uv run invoke docker-train --args="--config configs/config.yaml --epochs 5 --lr 1e-4"
+
+This approach combines the structure of Hydra-based configuration files with a user-friendly command-line interface for quick hyperparameter testing.
 
 ### Question 13
 
