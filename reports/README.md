@@ -174,7 +174,16 @@ This framework helped us complete the project by allowing us to leverage transfe
 >
 > Answer:
 
---- question 4 fill here ---
+We used uv for managing our dependencies. The list of dependencies was maintained by using uv add to automatically update our pyproject.toml, while uv sync ensured the uv.lock file was synchronized for a deterministic environment.
+
+We also auto-generated our dependencies into standard text files to ensure compatibility with other tools. We generated requirements.txt for production dependencies and a separate requirements_dev.txt for development tools like ruff and pytest.
+
+To get an exact copy of our development environment, a new team member would simply run:
+
+uv sync
+
+This single command reads the lock file and installs both production and development dependencies into a virtual environment. Alternatively, one could run pip install -r requirements.txt for a production-only install.
+
 
 ### Question 5
 
