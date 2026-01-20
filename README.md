@@ -60,6 +60,31 @@ uv run pre-commit run --all-files
 uv run invoke test
 ```
 
+## Load testing
+
+Run load tests with locust against the local API.
+
+### Start the API first
+
+```bash
+uv run uvicorn clickbait_classifier.api:app --reload
+```
+
+### Run locust with web UI
+
+```bash
+uv run locust -f tests/performancetests/locustfile.py
+```
+
+Open http://localhost:8089, set host to `http://localhost:8000`, configure users and spawn rate.
+
+### Run locust headless (CI/CD)
+
+```bash
+uv run locust -f tests/performancetests/locustfile.py \
+    --headless --users 10 --spawn-rate 2 --run-time 30s --host http://localhost:8000
+```
+
 ## Local development
 
 ### Preprocess data
