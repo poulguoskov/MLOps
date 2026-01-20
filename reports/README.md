@@ -400,8 +400,10 @@ To ensure no information is lost, we integrated Weights & Biases (W&B) using the
 > _training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>_
 >
 > Answer:
-> In our project, Docker was used to containerize parts of the machine learning pipeline to make the project easier to run and reproduce across different machines. We created separate Docker images for training, evaluation, and the API. This allowed us to isolate each task and ensure that everyone in the group could run the same code with the same dependencies, independent of their local environment.
-> The training image is used to train the model and save the trained weights to a shared folder. The evaluation image loads these saved weights and evaluates the model on validation or test data, storing the results as a JSON file. The API image runs a FastAPI application using Uvicorn, which exposes an endpoint for making predictions with the trained model.
+
+In our project, Docker was used to containerize parts of the machine learning pipeline to make the project easier to run and reproduce across different machines. We created separate Docker images for training, evaluation, and the API. This allowed us to isolate each task and ensure that everyone in the group could run the same code with the same dependencies, independent of their local environment.
+
+The training image is used to train the model and save the trained weights to a shared folder. The evaluation image loads these saved weights and evaluates the model on validation or test data, storing the results as a JSON file. The API image runs a FastAPI application using Uvicorn, which exposes an endpoint for making predictions with the trained model.
 
 #husk å legge til kommandoer og link når det er klart.
 
@@ -419,8 +421,10 @@ To ensure no information is lost, we integrated Weights & Biases (W&B) using the
 > _run of our main code at some point that showed ..._
 >
 > Answer:
-> When running into bugs during our experiments, we used a combination of systematic debugging and incremental testing. We used error messages and stack traces to identify where failures occurred, for example when dependencies were missing, paths were incorrect, or the Docker environment did not match the local setup.
-> We also used the Git history and branches to revert or compare changes when new bugs were introduced, which made it easier to identify the source of errors.
+
+When running into bugs during our experiments, we used a combination of systematic debugging and incremental testing. We used error messages and stack traces to identify where failures occurred, for example when dependencies were missing, paths were incorrect, or the Docker environment did not match the local setup.
+
+We also used the Git history and branches to revert or compare changes when new bugs were introduced, which made it easier to identify the source of errors.
 
 #husk å legge til profiling of code
 
