@@ -18,10 +18,10 @@ def export_to_onnx(checkpoint_path: str, output_path: str = "models/clickbait_mo
     # Dummy inputs matching tokenizer output
     batch_size = 1
     seq_len = 128
-    dummy_input_ids = torch.randint(0, 30522, (batch_size, seq_len))  # vocab size for BERT
+    dummy_input_ids = torch.randint(0, 30522, (batch_size, seq_len))
     dummy_attention_mask = torch.ones(batch_size, seq_len, dtype=torch.long)
 
-    # Export to ONNX
+    # Export to ONNX (without external data)
     print(f"Exporting to {output_path}")
     torch.onnx.export(
         model,
@@ -43,13 +43,20 @@ def export_to_onnx(checkpoint_path: str, output_path: str = "models/clickbait_mo
 
     onnx_model = onnx.load(output_path)
     onnx.checker.check_model(onnx_model)
-    print(f"ONNX model exported and validated: {output_path}")
+    print(f"✅ ONNX model exported and validated: {output_path}")
 
-    # Print model size comparison
-    pytorch_size = Path(checkpoint_path).stat().st_size / (1024 * 1024)
+    # Print model size
     onnx_size = Path(output_path).stat().st_size / (1024 * 1024)
-    print(f"PyTorch model: {pytorch_size:.1f} MB")
-    print(f"ONNX model: {onnx_size:.1f} MB")
+    print(f"ONNX model size: {onnx_size:.1f} MB")
+
+    # Check for external data file
+    data_file = Path(output_path + ".data")
+    if data_file.exists():
+        data_size = data_file.stat().st_size / (1024 * 1024)
+        print(f"External data file: {data_size:.1f} MB")
+        print("⚠️  Model has external data - may need both files for deployment")
+    else:
+        print("✅ No external data file - single file deployment")
 
 
 if __name__ == "__main__":
@@ -58,7 +65,6 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, default="models/clickbait_model.onnx")
     args = parser.parse_args()
 
-    # Auto-find latest checkpoint if not specified
     if not args.checkpoint:
         checkpoints = sorted(glob.glob("models/**/*.ckpt", recursive=True))
         if not checkpoints:

@@ -35,27 +35,71 @@ class BatchClassifyResponse(BaseModel):
 onnx_session: ort.InferenceSession | None = None
 tokenizer: DistilBertTokenizer | None = None
 
+# Configuration
+BUCKET_NAME = os.environ.get("MODEL_BUCKET", "dtumlops-clickbait-data")
 
-def find_onnx_model() -> Path | None:
-    """Find ONNX model file."""
+
+def download_model_from_gcs() -> str:
+    """Download the ONNX model (and external data) from GCS bucket."""
+    from google.cloud import storage
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(BUCKET_NAME)
+
+    local_model_path = "/tmp/clickbait_model.onnx"
+    local_data_path = "/tmp/clickbait_model.onnx.data"
+
+    # Find ONNX files in bucket
+    blobs = list(bucket.list_blobs(prefix="models/"))
+    onnx_blobs = [b for b in blobs if b.name.endswith(".onnx") and not b.name.endswith(".onnx.data")]
+    data_blobs = [b for b in blobs if b.name.endswith(".onnx.data")]
+
+    if not onnx_blobs:
+        raise FileNotFoundError(f"No ONNX model files found in bucket '{BUCKET_NAME}'")
+
+    # Get the most recently updated ONNX model
+    latest_onnx = max(onnx_blobs, key=lambda b: b.updated)
+    logger.info(f"Downloading ONNX model from GCS: {latest_onnx.name}")
+    latest_onnx.download_to_filename(local_model_path)
+    logger.info("ONNX model download complete")
+
+    # Download external data file if exists
+    # Match the data file to the model file
+    model_basename = latest_onnx.name  # e.g., models/clickbait_model.onnx
+    expected_data_name = model_basename + ".data"  # e.g., models/clickbait_model.onnx.data
+
+    matching_data = [b for b in data_blobs if b.name == expected_data_name]
+    if matching_data:
+        logger.info(f"Downloading external data file: {matching_data[0].name}")
+        matching_data[0].download_to_filename(local_data_path)
+        logger.info("External data download complete")
+    else:
+        logger.info("No external data file found (single-file model)")
+
+    return local_model_path
+
+
+def find_onnx_model() -> str:
+    """Find ONNX model file - local or GCS."""
     # Check environment variable first
     if model_path := os.getenv("ONNX_MODEL_PATH"):
         path = Path(model_path)
         if path.exists():
-            return path
+            return str(path)
 
-    # Check common locations
-    search_paths = [
+    # Check common local locations
+    local_paths = [
         Path("models/clickbait_model.onnx"),
         Path("/app/models/clickbait_model.onnx"),
-        Path("/gcs/dtumlops-clickbait-data/models/clickbait_model.onnx"),
     ]
 
-    for path in search_paths:
+    for path in local_paths:
         if path.exists():
-            return path
+            return str(path)
 
-    return None
+    # Try downloading from GCS
+    logger.info("No local ONNX model found, trying GCS...")
+    return download_model_from_gcs()
 
 
 @asynccontextmanager
@@ -67,9 +111,6 @@ async def lifespan(app: FastAPI):
 
     # Find and load ONNX model
     model_path = find_onnx_model()
-    if model_path is None:
-        raise RuntimeError("No ONNX model found. Set ONNX_MODEL_PATH or place model in models/")
-
     logger.info(f"Loading ONNX model from {model_path}")
 
     # Select providers (prefer CUDA if available)
@@ -81,7 +122,7 @@ async def lifespan(app: FastAPI):
         providers = ["CPUExecutionProvider"]
         logger.info("Using CPU execution provider")
 
-    onnx_session = ort.InferenceSession(str(model_path), providers=providers)
+    onnx_session = ort.InferenceSession(model_path, providers=providers)
     logger.info(f"ONNX model loaded. Providers: {onnx_session.get_providers()}")
 
     # Load tokenizer
