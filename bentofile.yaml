@@ -1,0 +1,13 @@
+service: 'src.clickbait_classifier.bentoml_service:ClickbaitClassifier'
+labels:
+  owner: group-19
+  project: clickbait-classifier
+include:
+  - 'src/clickbait_classifier/bentoml_service.py'
+  - 'models/clickbait_model.onnx'
+  - 'models/clickbait_model.onnx.data'
+python:
+  packages:
+    - onnxruntime
+    - transformers
+    - numpy
