@@ -67,7 +67,7 @@ Run load tests with locust against the local API.
 ### Start the API first
 
 ```bash
-uv run uvicorn clickbait_classifier.api:app --reload
+uv run invoke dev-api
 ```
 
 ### Run locust with web UI
