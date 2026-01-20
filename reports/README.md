@@ -364,7 +364,12 @@ This approach combines the structure of Hydra-based configuration files with a u
 >
 > Answer:
 
---- question 13 fill here ---
+
+First, we enforce determinism in train.py by calling pl.seed_everything(cfg.training.seed) and initializing the Lightning Trainer with deterministic=True. This locks all random number generators (NumPy, PyTorch, CUDA) to ensuring identical weight initialization and data splitting across runs.
+
+To ensure no information is lost, we integrated Weights & Biases (W&B) using the WandbLogger. Beyond tracking metrics, we configured the logger with log_model="all". This automatically uploads our trained model checkpoints directly to the W&B cloud, serving as a remote model registry. Additionally, our script saves the final configuration (including any CLI overrides) as a local config.yaml file via the save_config function.
+
+
 
 ### Question 14
 
