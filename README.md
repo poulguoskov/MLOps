@@ -386,168 +386,60 @@ The API loads the model from GCS bucket on startup.
 ### 1. Build and push image
 
 ```bash
-docker build --platform linux/amd64 \
-  -t clickbait-api-gcp:latest \
-  -f dockerfiles/api_gcp.dockerfile .
+docker buildx build --platform linux/amd64 \
+  -f dockerfiles/api_gcp.dockerfile \
+  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:v1 \
+  --push .
 
-docker tag clickbait-api-gcp:latest \
-  europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:latest
-
-docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:latest
 ```
 
 ### 2. Deploy to Cloud Run
 
 ```bash
-gcloud run deploy clickbait-api \
-  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:latest \
+gcloud run deploy clickbait-api-gcp \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-gcp:v1 \
   --region=europe-west1 \
-  --platform=managed \
+  --allow-unauthenticated \
+  --port=8000 \
   --memory=4Gi \
-  --cpu=2 \
-  --timeout=300 \
-  --cpu-boost
-```
-
-### 3. Test API
-
-```bash
-# Health check
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-    https://clickbait-api-136485552734.europe-west1.run.app/
-
-# Classify single text
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-    -X POST https://clickbait-api-136485552734.europe-west1.run.app/classify \
-    -H "Content-Type: application/json" \
-    -d '{"text": "You Will NEVER Believe What Happened Next"}'
-
-# Batch classify
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-    -X POST https://clickbait-api-136485552734.europe-west1.run.app/classify/batch \
-    -H "Content-Type: application/json" \
-    -d '{"texts": ["Scientists publish research", "This ONE Trick Changes Everything"]}'
-```
-
-Interactive docs: https://clickbait-api-136485552734.europe-west1.run.app/docs
-
-## ⚡ ONNX Deployment (Lightweight)
-
-ONNX provides a lighter-weight alternative to PyTorch for deployment.
-
-### Benefits
-
-| Metric          | PyTorch | ONNX   |
-| --------------- | ------- | ------ |
-| Docker image    | 4.27 GB | 568 MB |
-| Model file      | 759 MB  | 266 MB |
-| Memory required | 4 Gi    | 2 Gi   |
-| CPU required    | 2       | 1      |
-
-### Export model to ONNX
-
-```bash
-PYTHONPATH=src uv run python scripts/export_onnx.py
-```
-
-### Run ONNX API locally
-
-```bash
-# Start API
-PYTHONPATH=src uv run uvicorn clickbait_classifier.api_onnx:app --reload --port 8001
-
-# Test
-curl -X POST http://localhost:8001/classify \
-  -H "Content-Type: application/json" \
-  -d '{"text": "You Will NEVER Believe What Happened Next!"}'
-```
-
-### Deploy ONNX to Cloud Run
-
-```bash
-# Build and push
-docker build -f dockerfiles/api_onnx_gcp.dockerfile \
-  --platform linux/amd64 \
-  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-onnx:latest .
-
-docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-onnx:latest
-
-# Deploy (note: less resources needed)
-gcloud run deploy clickbait-api-onnx \
-  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/api-onnx:latest \
-  --region=europe-west1 \
-  --platform=managed \
-  --memory=2Gi \
-  --cpu=1 \
   --timeout=300
+
 ```
 
-### Benchmark comparison (1000 requests)
+3. Test API
+https://<din-url>.run.app/docs
 
-| Metric         | ONNX   | PyTorch   |
-| -------------- | ------ | --------- |
-| Mean latency   | 349 ms | 284 ms    |
-| Median latency | 327 ms | 219 ms    |
-| P95 latency    | 450 ms | 264 ms    |
-| Max latency    | 710 ms | 61,835 ms |
-| Requests/sec   | 2.87   | 3.52      |
 
-PyTorch is faster but ONNX is more consistent (no cold-start spikes) and uses half the resources.
 
-### Run cloud benchmark
+## 🖥️ Frontend (Streamlit)
+
+### 🏃‍♀️ Run Locally
+To run the frontend on your machine during development:
 
 ```bash
-PYTHONPATH=src uv run python scripts/benchmark_cloud.py \
-  --url https://clickbait-api-onnx-136485552734.europe-west1.run.app \
-  --requests 1000
+uv run streamlit run src/clickbait_classifier/frontend.py
 ```
+The app will be available at http://localhost:8501.
 
-## 🍱 BentoML Service
+### 🐳 Deploy to Cloud Run
 
-BentoML provides ML-optimized serving with adaptive batching.
+To deploy the frontend to Google Cloud Run, follow these steps:
 
-### Run locally
+1. Build and Push Image
+```bash
+docker buildx build --platform linux/amd64 \
+  -f dockerfiles/frontend.dockerfile \
+  -t europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/frontend:v1 \
+  --push .
+  ```
+2. Deploy Service Note: Streamlit runs on port 8501 by default.
 
 ```bash
-uv run bentoml serve src.clickbait_classifier.bentoml_service:ClickbaitClassifier
-```
-
-### Test endpoint
-
-```bash
-curl -X POST http://localhost:3000/classify \
-  -H "Content-Type: application/json" \
-  -d '{"texts": ["You Will NEVER Believe What Happened Next!"]}'
-```
-
-### Build and containerize
-
-```bash
-uv run bentoml build
-uv run bentoml containerize clickbait_classifier:latest --opt platform=linux/amd64
-```
-
-### Deploy to Cloud Run
-
-```bash
-docker tag clickbait_classifier:latest \
-  europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest
-docker push europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest
-
-gcloud run deploy clickbait-bentoml \
-  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/bentoml-service:latest \
+gcloud run deploy clickbait-frontend \
+  --image=europe-west1-docker.pkg.dev/dtumlops-484212/container-reg/frontend:v1 \
   --region=europe-west1 \
-  --memory=2Gi \
-  --port=3000
+  --allow-unauthenticated \
+  --port=8501
 ```
 
-Service URL: https://clickbait-bentoml-136485552734.europe-west1.run.app
-
-### Load test results (10 users, 30s)
-
-| Metric       | BentoML |
-| ------------ | ------- |
-| Requests/sec | 26.91   |
-| Mean latency | 111 ms  |
-| P95 latency  | 180 ms  |
-| Errors       | 0%      |
+After deployment, click the URL provided in the terminal to open the app.
