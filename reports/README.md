@@ -447,11 +447,15 @@ We also used the Git history and branches to revert or compare changes when new 
 
 In our project we used several services from Google Cloud Platform (GCP).
 
-We used Cloud Storage to store datasets and trained model artifacts. Buckets were used both for input data and for saving model checkpoints, making the data easily accessible from different environments.
+We used Cloud Storage to store datasets and trained model checkpoints. Buckets were used both for input data and for saving model checkpoints, making the data easily accessible.
 
-We used Artifact Registry to store and manage Docker container images. These images were used both locally and when running training jobs in the cloud.
+Artifact Registry was used to manage our Docker container images for training, the API, and the frontend, ensuring consistency across environments.
 
 We used Vertex AI (and compute engine) for scalable model training through custom jobs. Vertex AI allowed us to submit training jobs that automatically provision the required compute resources, run our Docker container, and shut down resources after completion, simplifying cloud-based experimentation.
+
+We utilized Cloud Build for CI. Triggered by git pushes, it automated the building of our Docker images, while Cloud Logging allowed us to monitor the build logs.
+
+Finally, we used Cloud Run to deploy our application. We hosted both our FastAPI inference endpoint and our Streamlit frontend on Cloud Run.
 
 ### Question 18
 
