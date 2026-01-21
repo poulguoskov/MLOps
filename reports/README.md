@@ -554,7 +554,20 @@ Training a model for 5 epochs took approximately 15 minutes on GPU, compared to 
 >
 > Answer:
 
---- question 23 fill here ---
+Yes, we managed to write an API for our model using FastAPI. The API provides endpoints for classifying headlines as clickbait or not clickbait.
+
+The main endpoints are:
+- `GET /` - Health check returning API status
+- `POST /classify` - Single headline classification
+- `POST /classify/batch` - Batch classification for multiple headlines
+
+The classify endpoint accepts a JSON payload with a text field, tokenizes the input using the DistilBERT tokenizer, runs inference through the model, and returns the prediction (is_clickbait boolean), confidence score, and the original text.
+
+We implemented model loading at startup using FastAPI's lifespan context manager, which loads the model once when the server starts rather than on each request. This improves response times significantly.
+
+For deployment flexibility, we created three API variants: the standard PyTorch version, an ONNX-optimized version for faster inference and smaller image size, and a BentoML version for standardized ML serving. The ONNX variant reduced the Docker image from 4.27GB to 568MB while maintaining the same prediction accuracy.
+
+Input validation is handled automatically by Pydantic models, returning 422 errors for malformed requests.
 
 ### Question 24
 
