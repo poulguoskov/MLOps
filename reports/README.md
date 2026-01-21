@@ -184,7 +184,6 @@ To get an exact copy of our development environment, a new team member would sim
 
 This single command reads the lock file and installs both production and development dependencies into a virtual environment. Alternatively, one could run `pip install -r requirements.txt` for a production-only install.
 
-
 ### Question 5
 
 > **We expect that you initialized your project using the cookiecutter template. Explain the overall structure of your**
@@ -557,6 +556,7 @@ Training a model for 5 epochs took approximately 15 minutes on GPU, compared to 
 Yes, we managed to write an API for our model using FastAPI. The API provides endpoints for classifying headlines as clickbait or not clickbait.
 
 The main endpoints are:
+
 - `GET /` - Health check returning API status
 - `POST /classify` - Single headline classification
 - `POST /classify/batch` - Batch classification for multiple headlines
@@ -594,6 +594,7 @@ For cloud deployment, we used Google Cloud Run, which provides serverless contai
 The deployment process is automated through Cloud Build triggers. When we push to main, Cloud Build builds the Docker image, pushes it to Artifact Registry, and deploys to Cloud Run.
 
 To invoke the deployed service, users can send a POST request:
+
 ```bash
 curl -X POST https://api-onnx-xxxxx-ew.a.run.app/classify \
   -H "Content-Type: application/json" \
@@ -691,7 +692,17 @@ The load test identified a potential thread-safety issue with the tokenizer when
 >
 > Answer:
 
---- question 29 fill here ---
+![Architecture diagram of the MLOps pipeline](figures/overview.png)
+
+The diagram shows the overall architecture of our MLOps pipeline, illustrating how code flows from local development to production deployment.
+
+The starting point is local development, where we write source code and run tests with pytest. When code is pushed to GitHub, it triggers multiple workflows.
+
+GitHub Actions runs our CI pipeline for linting and testing, and also builds documentation to GitHub Pages. Pushes to main also trigger Google Cloud Build, which automatically builds Docker images and pushes them to Artifact Registry. From there, images are deployed to Cloud Run, where we host the Streamlit frontend, FastAPI backend, and an ONNX-optimized API variant.
+
+For model training, Vertex AI pulls training data from Cloud Storage. During training, metrics and logs are sent to Weights & Biases for experiment tracking. Trained models are registered in the W&B Model Registry, which can trigger GitHub Actions via webhook to promote models to production.
+
+This architecture provides full traceability from code changes through testing, building, training, and deployment, while keeping components loosely coupled and independently scalable.
 
 ### Question 30
 
@@ -733,7 +744,7 @@ All members contributed to core components including the data pipeline, model im
 
 We used generative AI tools including Claude and GitHub Copilot to assist with debugging, writing boilerplate code, and drafting documentation.
 
-<!-- 
+<!--
 Student s253737 was responsible for creating the API Docker file, training Docker file, and evaluation Docker file. s253737 implemented the FastAPI application for inference, developed the evaluation.py, set up the continuous integration workflow, added linting, created API tests, and configured CI for the API tests.
 
 All members contributed to the tasks.py, pyproject.toml, .gitignore, as they were updated continuously.
