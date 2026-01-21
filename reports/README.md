@@ -495,6 +495,8 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 >
 > Answer:
 
+![GCP bucket showing project data and models](figures/bucket.png)
+
 ### Question 20
 
 > **Upload 1-2 images of your GCP artifact registry, such that we can see the different docker images that you have**
