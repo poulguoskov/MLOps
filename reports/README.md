@@ -417,9 +417,11 @@ In our project, Docker was used to containerize parts of the machine learning pi
 
 The training image is used to train the model and save the trained weights to a shared folder. The evaluation image loads these saved weights and evaluates the model on validation or test data, storing the results as a JSON file. The API image runs a FastAPI application using Uvicorn, which exposes an endpoint for making predictions with the trained model.
 
-#husk å legge til kommandoer og link når det er klart.
+To run the training image: `docker compose run train`
 
---- question 15 fill here ---
+To run the API: `docker compose up api`
+
+Link to training Dockerfile: https://github.com/kajahovinbole/Machine-Learning-Operations/blob/main/dockerfiles/train.dockerfile
 
 ### Question 16
 
