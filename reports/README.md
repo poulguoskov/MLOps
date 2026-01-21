@@ -390,7 +390,15 @@ To ensure no information is lost, we integrated Weights & Biases (W&B) using the
 >
 > Answer:
 
---- question 14 fill here ---
+As seen in the image, we tracked key training metrics using Weights & Biases. The top row shows our primary ML metrics: val_accuracy climbing from approximately 98.4% to 98.8% over 5 epochs, and train_loss steadily decreasing from 2.06 to 2.01, indicating the pretrained model was was already good for this task.
+
+The bottom section displays system metrics that W&B automatically captures. GPU Utilization shows consistent ~100% usage during training, confirming efficient hardware utilization. GPU Power Usage fluctuated around 150W, while GPU Temperature stayed in a safe range around 78-80°C. These system metrics helped us verify that our training was running efficiently on the cloud GPU.
+
+We configured the WandbLogger with `log_model="all"`, which automatically uploads model checkpoints to W&B's artifact storage after training completes. This creates a remote model registry where we can version, compare, and retrieve trained models. Combined with the saved Hydra configuration files, this enables full experiment reproducibility - any team member can download a specific model version and its exact training configuration.
+
+The combination of ML metrics and system metrics in a single dashboard made it easy to monitor experiments in real-time, especially useful when running training jobs on Vertex AI where direct access to the machine is limited.
+
+![W&B dashboard showing training metrics and system monitoring](figures/Screenshot 2026-01-21 135725.png)
 
 ### Question 15
 
