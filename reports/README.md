@@ -440,9 +440,7 @@ When running into bugs during our experiments, we used a combination of systemat
 
 We also used the Git history and branches to revert or compare changes when new bugs were introduced, which made it easier to identify the source of errors.
 
-#husk å legge til profiling of code
-
---- question 16 fill here ---
+For profiling, we added support for PyTorch Lightning's built-in profiler in our training script. Running with profiling enabled generates a report showing time spent in each function, which helps identify bottlenecks. However, since our model already trained quickly (under 5 minutes for 5 epochs) and achieved 98.9% accuracy, we did not perform extensive optimization based on profiling results. The main bottleneck was data loading and tokenization, which is expected when using transformer models.
 
 ## Working in the cloud
 
