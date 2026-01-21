@@ -398,7 +398,7 @@ We configured the WandbLogger with `log_model="all"`, which automatically upload
 
 The combination of ML metrics and system metrics in a single dashboard made it easy to monitor experiments in real-time, especially useful when running training jobs on Vertex AI where direct access to the machine is limited.
 
-![W&B dashboard showing training metrics and system monitoring](figures/Screenshot 2026-01-21 135725.png)
+![W&B dashboard showing training metrics and system monitoring](figures/wandb.png)
 
 ### Question 15
 
