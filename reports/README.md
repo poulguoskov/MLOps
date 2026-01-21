@@ -301,10 +301,12 @@ Both approaches have tradeoffs: branches provide isolation and review opportunit
 > _pipeline_
 >
 > Answer:
-No, we did not use DVC for managing data in this project. However, DVC would be beneficial in projects where datasets are large, change over time, or cannot be easily stored directly in Git. As it is described in the course material, DVC allows data to be versioned alongside code without placing the actual data files in the Git repository, instead storing them in external storage such as cloud buckets.
-This would be useful in machine learning workflows where data preprocessing, feature engineering, or dataset composition evolves during development. If we used DVC, it would be possible to reproduce experiments exactly by checking out a specific Git commit and pulling the corresponding data version.
-DVC can also help ensure consistency across team members and environments, and reduce errors caused by using different versions of the data. This improves reproducibility, collaboration, and traceability in ML projects.
 
+No, we did not use DVC for managing data in this project. However, DVC would be beneficial in projects where datasets are large, change over time, or cannot be easily stored directly in Git. As it is described in the course material, DVC allows data to be versioned alongside code without placing the actual data files in the Git repository, instead storing them in external storage such as cloud buckets.
+
+This would be useful in machine learning workflows where data preprocessing, feature engineering, or dataset composition evolves during development. If we used DVC, it would be possible to reproduce experiments exactly by checking out a specific Git commit and pulling the corresponding data version.
+
+DVC can also help ensure consistency across team members and environments, and reduce errors caused by using different versions of the data. This improves reproducibility, collaboration, and traceability in ML projects.
 
 ### Question 11
 
