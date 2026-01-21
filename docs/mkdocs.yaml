@@ -2,7 +2,7 @@ site_name: Clickbait Classifier
 site_author: Group 19
 site_description: A machine learning API that detects clickbait headlines
 docs_dir: source
-site_dir: ../site
+site_dir: site
 
 theme:
   language: en
@@ -26,4 +26,3 @@ nav:
   - Project Description: PROJECT.md
   - Development & Deployment: DEPLOYMENT.md
   - API Reference: api.md
-
