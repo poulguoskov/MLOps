@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: pip install mkdocs mkdocs-material
+      - run: pip install mkdocs mkdocs-material "mkdocstrings[python]"
       - run: mkdocs build --config-file docs/mkdocs.yaml
       - uses: actions/upload-pages-artifact@v3
         with:
