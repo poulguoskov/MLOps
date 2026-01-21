@@ -529,7 +529,15 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 >
 > Answer:
 
---- question 22 fill here ---
+Yes, we managed to train our model in the cloud using Vertex AI. We created a custom training job configuration specifying machine type and GPU requirements.
+
+The workflow was as follows: First, Cloud Build automatically builds and pushes our training Docker image to Artifact Registry whenever we push to main. Then, we submit a Vertex AI custom training job that pulls this image and runs training on cloud infrastructure.
+
+For GPU training, we used an n1-standard-8 machine with an NVIDIA Tesla T4 GPU. The training container mounts data from our GCS bucket, runs the training script with Hydra configuration, and uploads the trained model checkpoint back to GCS and to Weights & Biases.
+
+We chose Vertex AI over manually managing Compute Engine VMs because it handles provisioning, container execution, and automatic shutdown after training completes. This reduced costs by ensuring we only pay for compute time during actual training, and simplified the workflow since we did not need to manage SSH access or driver installation.
+
+Training a model for 5 epochs took approximately 15 minutes on GPU, compared to over an hour on CPU-only machines.
 
 ## Deployment
 
