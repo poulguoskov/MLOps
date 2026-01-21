@@ -12,6 +12,8 @@ A machine learning API that detects clickbait headlines using a fine-tuned Disti
 
 **API Documentation:** https://clickbait-api-gcp-136485552734.europe-west1.run.app/docs
 
+> ⚠️ **Note:** Cloud Run containers scale to zero when idle. The first request after inactivity may take 10-30 seconds to cold start. If it times out, try again!
+
 ## API Endpoints
 
 | Endpoint          | Method | Description                 |
@@ -73,9 +75,7 @@ uv run invoke dev-api
 
 ## 👥 Team
 
-DTU MLOps Course
-Group 19
-Julia Melina Jones Borgund
-Kaja Hovinbøle
-Poul Guo Skov
-Yannick Brot Christensen
+- Julia Melina Jones Borgund
+- Kaja Hovinbøle
+- Poul Guo Skov
+- Yannick Brot Christensen
