@@ -583,7 +583,24 @@ Input validation is handled automatically by Pydantic models, returning 422 erro
 >
 > Answer:
 
---- question 24 fill here ---
+Yes, we deployed our API both locally and to the cloud. For local development, we used Docker Compose to run the API container with the trained model mounted as a volume.
+
+For cloud deployment, we used Google Cloud Run, which provides serverless container hosting with automatic scaling. We deployed three variants of our API:
+
+1. **PyTorch API** - Standard deployment with full PyTorch model
+2. **ONNX API** - Optimized deployment with smaller image and faster cold starts
+3. **BentoML API** - Alternative ML serving framework
+
+The deployment process is automated through Cloud Build triggers. When we push to main, Cloud Build builds the Docker image, pushes it to Artifact Registry, and deploys to Cloud Run.
+
+To invoke the deployed service, users can send a POST request:
+```bash
+curl -X POST https://api-onnx-xxxxx-ew.a.run.app/classify \
+  -H "Content-Type: application/json" \
+  -d '{"text": "You wont believe what happened next!"}'
+```
+
+We also deployed a Streamlit frontend that provides a user-friendly interface for interacting with the API, allowing users to input headlines and see predictions without using curl or code.
 
 ### Question 25
 
