@@ -13,4 +13,4 @@ reports/evaluation_results.json
 
 .DS_Store
 lightning_logs/
-site/
+docs/site/

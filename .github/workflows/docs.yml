@@ -22,5 +22,5 @@ jobs:
       - run: mkdocs build --config-file docs/mkdocs.yaml
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: docs/site
       - uses: actions/deploy-pages@v4

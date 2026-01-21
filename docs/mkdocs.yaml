@@ -1,7 +1,7 @@
 site_name: Clickbait Classifier
 site_author: Group 19
 site_description: A machine learning API that detects clickbait headlines
-docs_dir: ..
+docs_dir: source
 site_dir: ../site
 
 theme:
@@ -17,15 +17,13 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: [src]
+          paths: [../src]
           options:
             show_source: false
 
 nav:
-  - Home: README.md
-  - Project Description: docs/source/PROJECT.md
-  - Development & Deployment: docs/source/DEPLOYMENT.md
-  - API Reference: docs/source/api.md
+  - Home: index.md
+  - Project Description: PROJECT.md
+  - Development & Deployment: DEPLOYMENT.md
+  - API Reference: api.md
 
-exclude_docs: |
-  reports/README.md
