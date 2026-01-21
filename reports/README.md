@@ -199,7 +199,8 @@ This single command reads the lock file and installs both production and develop
 >
 > Answer:
 
---- question 5 fill here ---
+From the cookiecutter template we filled out the src/clickbait_classifier folder with our model, training, data processing, and API code. We also filled out the configs folder with Hydra configuration files, the dockerfiles folder with multiple Dockerfiles for training, evaluation, and deployment, and the tests folder with unit tests for data, model, and API.
+We kept the docs folder for mkdocs documentation and the reports folder for the exam template. We added a scripts folder for utility scripts like ONNX export and benchmarking. We also added GitHub Actions workflows in .github/workflows for CI, model registry triggers, and documentation deployment.
 
 ### Question 6
 
