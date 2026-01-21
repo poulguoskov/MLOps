@@ -70,8 +70,8 @@ uv run invoke dev-api
 
 ## 📚 Documentation
 
-- [Project Description](docs/PROJECT.md) - Goals, data, and model details
-- [Development & Deployment](docs/DEPLOYMENT.md) - Setup, training, and cloud deployment
+- [Project Description](docs/source/PROJECT.md) - Goals, data, and model details
+- [Development & Deployment](docs/source/DEPLOYMENT.md) - Setup, training, and cloud deployment
 
 ## 👥 Team
 
