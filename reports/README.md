@@ -243,8 +243,6 @@ In total we have implemented 27 tests. Primarily we are testing data integrity t
 
 Additionally, we implemented integration tests for the API and the training loop to ensure that the different components of the pipeline interact correctly, though some of these require specific environments to run.
 
---- question 7 fill here ---
-
 ### Question 8
 
 > **What is the total code coverage (in percentage) of your code? If your code had a code coverage of 100% (or close**
@@ -284,11 +282,12 @@ Therefore, coverage is useful for finding untested code, but it is not a guarant
 > _addition to the main branch. To merge code we ..._
 >
 > Answer:
-Yes, our workflow includes the use of branches and pull requests. We work on separate feature branches when adding new functionality, instead of working directly on the main branch. This way we can develop and experiment without risking breaking the stable version of the project.
-When a feature was ready, it was pushed to its branch and merged into main through a pull request. The pull request make it possible to review the changes, see which files are modified, and resolve merge conflicts in a controlled way before code was merged. This is useful when multiple group members worked on similar files.
-Using branches and pull requests improves version control by keeping the main branch stable, making collaboration safer, and providing a clear history of changes and decisions made during development.
 
+Yes, our workflow included branches and pull requests, though practices varied by team member. Some members worked on feature branches and merged through pull requests, which allowed for code review and conflict resolution before changes reached main.
 
+Other members, particularly when working on sequential tasks, committed directly to main and used git rebase to maintain a clean linear history when pulling remote changes. This avoided merge commits and kept the git log easier to follow.
+
+Both approaches have tradeoffs: branches provide isolation and review opportunities, while rebasing on main keeps history linear but requires more care to avoid conflicts. For our project size and team, this flexible approach worked well, with branches used for larger features and direct commits for smaller fixes.
 
 ### Question 10
 
