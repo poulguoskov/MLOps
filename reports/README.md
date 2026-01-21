@@ -174,15 +174,15 @@ This framework helped us complete the project by allowing us to leverage transfe
 >
 > Answer:
 
-We used uv for managing our dependencies. The list of dependencies was maintained by using uv add to automatically update our pyproject.toml, while uv sync ensured the uv.lock file was synchronized for a deterministic environment.
+We used `uv` for managing our dependencies. The list of dependencies was maintained by using `uv add` to automatically update our `pyproject.toml`, while `uv sync` ensured the `uv.lock` file was synchronized for a deterministic environment.
 
-We also auto-generated our dependencies into standard text files to ensure compatibility with other tools. We generated requirements.txt for production dependencies and a separate requirements_dev.txt for development tools like ruff and pytest.
+We also auto-generated our dependencies into standard text files to ensure compatibility with other tools. We generated `requirements.txt` for production dependencies and a separate `requirements_dev.txt` for development tools like `ruff` and `pytest`.
 
 To get an exact copy of our development environment, a new team member would simply run:
 
-uv sync
+`uv sync`
 
-This single command reads the lock file and installs both production and development dependencies into a virtual environment. Alternatively, one could run pip install -r requirements.txt for a production-only install.
+This single command reads the lock file and installs both production and development dependencies into a virtual environment. Alternatively, one could run `pip install -r requirements.txt` for a production-only install.
 
 
 ### Question 5
@@ -199,9 +199,9 @@ This single command reads the lock file and installs both production and develop
 >
 > Answer:
 
-From the cookiecutter template we filled out the src/clickbait_classifier folder with our model, training, data processing, and API code. We also filled out the configs folder with Hydra configuration files, the dockerfiles folder with multiple Dockerfiles for training, evaluation, and deployment, and the tests folder with unit tests for data, model, and API.
+From the cookiecutter template we filled out the `src/clickbait_classifier` folder with our model, training, data processing, and API code. We also filled out the `configs` folder with Hydra configuration files, the `dockerfiles` folder with multiple Dockerfiles for training, evaluation, and deployment, and the `tests` folder with unit tests for data, model, and API.
 
-We kept the docs folder for mkdocs documentation and the reports folder for the exam template. We added a scripts folder for utility scripts like ONNX export and benchmarking. We also added GitHub Actions workflows in .github/workflows for CI, model registry triggers, and documentation deployment.
+We kept the `docs` folder for `mkdocs` documentation and the `reports` folder for the exam template. We added a `scripts` folder for utility scripts like `ONNX` export and benchmarking. We also added GitHub Actions workflows in `.github/workflows` for CI, model registry triggers, and documentation deployment.
 
 ### Question 6
 
@@ -216,9 +216,9 @@ We kept the docs folder for mkdocs documentation and the reports folder for the 
 >
 > Answer:
 
-We used ruff for both linting and formatting. Ruff checks for unused imports, formatting issues, and common Python errors. We enforced this through pre-commit hooks that run automatically before each commit, and through our CI pipeline which fails if linting errors are found.
+We used `ruff` for both linting and formatting. Ruff checks for unused imports, formatting issues, and common Python errors. We enforced this through pre-commit hooks that run automatically before each commit, and through our CI pipeline which fails if linting errors are found.
 
-For typing, we used Python type hints throughout the codebase, especially in function signatures. For documentation, we wrote docstrings for our main classes and functions, which are automatically rendered into API documentation using mkdocstrings.
+For typing, we used Python type hints throughout the codebase, especially in function signatures. For documentation, we wrote docstrings for our main classes and functions, which are automatically rendered into API documentation using `mkdocstrings`.
 
 These concepts matter in larger projects because they reduce bugs, make code easier to understand, and help new team members onboard faster. Typing helps catch errors before runtime and improves IDE autocompletion. Documentation ensures knowledge isn't lost when team members change.
 
@@ -285,7 +285,7 @@ Therefore, coverage is useful for finding untested code, but it is not a guarant
 
 Yes, our workflow included branches and pull requests, though practices varied by team member. Some members worked on feature branches and merged through pull requests, which allowed for code review and conflict resolution before changes reached main.
 
-Other members, particularly when working on sequential tasks, committed directly to main and used git rebase to maintain a clean linear history when pulling remote changes. This avoided merge commits and kept the git log easier to follow.
+Other members, particularly when working on sequential tasks, committed directly to main and used `git rebase` to maintain a clean linear history when pulling remote changes. This avoided merge commits and kept the git log easier to follow.
 
 Both approaches have tradeoffs: branches provide isolation and review opportunities, while rebasing on main keeps history linear but requires more care to avoid conflicts. For our project size and team, this flexible approach worked well, with branches used for larger features and direct commits for smaller fixes.
 
@@ -325,11 +325,11 @@ DVC can also help ensure consistency across team members and environments, and r
 
 We use GitHub Actions for continuous integration to automatically check the quality of our code. The CI workflow is triggered both on pull requests and on pushes to the main branch, which means that changes are checked before they are merged as well as after they are added to the main codebase. This helps us catch errors early and ensures that the main branch remains stable.
 
-Our CI setup includes both linting and unit testing. Linting is done using ruff, which checks for unused imports, formatting issues, and common Python errors. This helps keep the codebase clean and consistent, and prevents small mistakes from accumulating over time. In addition to linting, we use pytest for unit testing. The tests are used to verify that key parts of the project, such as data handling, model components, and training logic, work as expected.
+Our CI setup includes both linting and unit testing. Linting is done using `ruff`, which checks for unused imports, formatting issues, and common Python errors. This helps keep the codebase clean and consistent, and prevents small mistakes from accumulating over time. In addition to linting, we use `pytest` for unit testing. The tests are used to verify that key parts of the project, such as data handling, model components, and training logic, work as expected.
 
 The workflow runs on multiple operating systems using a matrix configuration. We test the project on Ubuntu, macOS, and Windows, all using Python 3.13, to ensure that the code behaves consistently across different environments and platforms.
 
-Dependencies are installed using uv, which provides a fast and reproducible setup. By relying on uv together with GitHub Actions’ caching mechanisms, we avoid reinstalling all dependencies from scratch on every run, which reduces the overall CI runtime.
+Dependencies are installed using `uv`, which provides a fast and reproducible setup. By relying on `uv` together with GitHub Actions’ caching mechanisms, we avoid reinstalling all dependencies from scratch on every run, which reduces the overall CI runtime.
 
 We chose to keep the CI setup in a single workflow file, as this was sufficient for the size and complexity of our project while still covering the most important CI checks.
 
@@ -350,13 +350,13 @@ We chose to keep the CI setup in a single workflow file, as this was sufficient 
 >
 > Answer:
 
-We used Hydra to manage configurations. Our setup relies on a config file (configs/config.yaml), where we define hyperparameters and use Hydra for variable interpolation and object instantiation.
+We used Hydra to manage configurations. Our setup relies on a config file (`configs/config.yaml`), where we define hyperparameters and use Hydra for variable interpolation and object instantiation.
 
 To run an experiment, we utilize a CLI wrapper that allows us to load a base config and override specific parameters using standard flags. For example:
 
-uv run invoke docker-train --args="--config configs/config.yaml --epochs 5 --lr 1e-4"
+`uv run invoke docker-train --args="--config configs/config.yaml --epochs 5 --lr 1e-4"`
 
-This approach combines the structure of Hydra-based configuration files with a user-friendly command-line interface for quick hyperparameter testing. To reproduce an experiment, one would retrieve the model artifact from W&B and use the saved config.yaml file.
+This approach combines the structure of Hydra-based configuration files with a user-friendly command-line interface for quick hyperparameter testing. To reproduce an experiment, one would retrieve the model artifact from W&B and use the saved `config.yaml` file.
 
 ### Question 13
 
@@ -371,12 +371,9 @@ This approach combines the structure of Hydra-based configuration files with a u
 >
 > Answer:
 
+First, we enforce determinism in `train.py` by calling `pl.seed_everything(cfg.training.seed)` and initializing the Lightning Trainer with `deterministic=True`. This locks all random number generators (NumPy, PyTorch, CUDA) to ensuring identical weight initialization and data splitting across runs.
 
-First, we enforce determinism in train.py by calling pl.seed_everything(cfg.training.seed) and initializing the Lightning Trainer with deterministic=True. This locks all random number generators (NumPy, PyTorch, CUDA) to ensuring identical weight initialization and data splitting across runs.
-
-To ensure no information is lost, we integrated Weights & Biases (W&B) using the WandbLogger. Beyond tracking metrics, we configured the logger with log_model="all". This automatically uploads our trained model checkpoints directly to the W&B cloud, serving as a remote model registry. Additionally, our script saves the final configuration (including any CLI overrides) as a local config.yaml file via the save_config function.
-
-
+To ensure no information is lost, we integrated Weights & Biases (W&B) using the `WandbLogger`. Beyond tracking metrics, we configured the logger with `log_model="all"`. This automatically uploads our trained model checkpoints directly to the W&B cloud, serving as a remote model registry. Additionally, our script saves the final configuration (including any CLI overrides) as a local `config.yaml` file via the `save_config` function.
 
 ### Question 14
 
