@@ -514,7 +514,7 @@ This approach allowed us to benefit from Compute Engine’s scalable virtual mac
 >
 > Answer:
 
---- question 21 fill here ---
+![Cloud Build history showing automated Docker builds](figures/build.png)
 
 ### Question 22
 
