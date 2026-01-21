@@ -2,7 +2,9 @@
 
 A machine learning API that detects clickbait headlines using a fine-tuned DistilBERT model.
 
-![Demo](reports/figures/demo.gif)
+<p align="center">
+  <img src="reports/figures/demo.gif" width="600" alt="Demo">
+</p>
 
 ## 🚀 Try It Live
 
