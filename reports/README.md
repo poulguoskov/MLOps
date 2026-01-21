@@ -200,6 +200,7 @@ This single command reads the lock file and installs both production and develop
 > Answer:
 
 From the cookiecutter template we filled out the src/clickbait_classifier folder with our model, training, data processing, and API code. We also filled out the configs folder with Hydra configuration files, the dockerfiles folder with multiple Dockerfiles for training, evaluation, and deployment, and the tests folder with unit tests for data, model, and API.
+
 We kept the docs folder for mkdocs documentation and the reports folder for the exam template. We added a scripts folder for utility scripts like ONNX export and benchmarking. We also added GitHub Actions workflows in .github/workflows for CI, model registry triggers, and documentation deployment.
 
 ### Question 6
@@ -215,7 +216,11 @@ We kept the docs folder for mkdocs documentation and the reports folder for the 
 >
 > Answer:
 
+We used ruff for both linting and formatting. Ruff checks for unused imports, formatting issues, and common Python errors. We enforced this through pre-commit hooks that run automatically before each commit, and through our CI pipeline which fails if linting errors are found.
 
+For typing, we used Python type hints throughout the codebase, especially in function signatures. For documentation, we wrote docstrings for our main classes and functions, which are automatically rendered into API documentation using mkdocstrings.
+
+These concepts matter in larger projects because they reduce bugs, make code easier to understand, and help new team members onboard faster. Typing helps catch errors before runtime and improves IDE autocompletion. Documentation ensures knowledge isn't lost when team members change.
 
 ## Version control
 
