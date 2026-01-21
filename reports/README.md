@@ -356,7 +356,7 @@ To run an experiment, we utilize a CLI wrapper that allows us to load a base con
 
 uv run invoke docker-train --args="--config configs/config.yaml --epochs 5 --lr 1e-4"
 
-This approach combines the structure of Hydra-based configuration files with a user-friendly command-line interface for quick hyperparameter testing.
+This approach combines the structure of Hydra-based configuration files with a user-friendly command-line interface for quick hyperparameter testing. To reproduce an experiment, one would retrieve the model artifact from W&B and use the saved config.yaml file.
 
 ### Question 13
 
