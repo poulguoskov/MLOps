@@ -718,13 +718,23 @@ The load test identified a potential thread-safety issue with the tokenizer when
 > Recommended answer length: 50-300 words.
 >
 > Example:
-> Student s253737 was responsible for creating the API Docker file, training Docker file, and evaluation Docker file. s253737 implemented the FastAPI application for inference, developed the evaluation.py, set up the continuous integration workflow, added linting, created API tests, and configured CI for the API tests.
-
-All members contributed to the tasks.py, pyproject.toml, .gitignore, as they were updated continuously.
-
 > _Student sXXXXXX was in charge of developing of setting up the initial cookie cutter project and developing of the_
 > _docker containers for training our applications._
 > _Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards._
 > _All members contributed to code by..._
 > _We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code._
 > Answer:
+
+All group members contributed across the full project stack, with each person taking primary responsibility for different areas while collaborating on implementation details.
+
+s253737 focused primarily on API development, testing infrastructure, and continuous integration. s253736 worked mainly on cloud infrastructure, frontend development, and code quality tooling. s224193 concentrated on experiment configuration, model training pipeline, and optimization. s221337 handled containerization, deployment variants, and documentation.
+
+All members contributed to core components including the data pipeline, model implementation, debugging, code review, and report writing. Shared files like pyproject.toml, tasks.py, and configuration files were updated collaboratively throughout the project.
+
+We used generative AI tools including Claude and GitHub Copilot to assist with debugging, writing boilerplate code, and drafting documentation.
+
+<!-- 
+Student s253737 was responsible for creating the API Docker file, training Docker file, and evaluation Docker file. s253737 implemented the FastAPI application for inference, developed the evaluation.py, set up the continuous integration workflow, added linting, created API tests, and configured CI for the API tests.
+
+All members contributed to the tasks.py, pyproject.toml, .gitignore, as they were updated continuously.
+-->
