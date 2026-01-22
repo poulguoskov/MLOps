@@ -727,9 +727,15 @@ This architecture provides full traceability from code changes through testing, 
 >
 > Answer:
 
-- cloud
+One of the things we struggled was related to GitHub permissions and GCP integrations. We couldn't give the necessary admin access to collaborators, which actually forced us to transfer the ownership of the entire repository to the team member working on the cloud just to get the Cloud Build triggers to work.
 
---- question 30 fill here ---
+We also had a hard time finding available GPUs. It was difficult to find a region that matched our quotas and actually had stock. We spent a lot of time dealing with availability errors and had to check the course Slack for tips on which regions were currently working.
+
+Overall, the cloud part of the project was time consuming because of the amount of trial and error, since it was our first time setting up a full pipeline.
+
+In addition to the cloud challenges, we faced challenges with version control, for example regarding .gitignore and large model files accidentally entering the repository. We had to clean up tracked files and establish stricter guidelines on what data belongs in Git versus what should be generated locally.
+
+Furthermore, our initial Docker setup was inefficient, leading to slow rebuilds. By refactoring the Dockerfiles to leverage layer caching and utilizing environment variables, we significantly streamlined the containerization process. Finally, getting GitHub Actions to mirror our local environment was tricky due to Python version mismatches. We stabilized this by implementing a matrix strategy in our workflows and adding explicit linting and testing steps to catch errors early.
 
 ### Question 31
 
