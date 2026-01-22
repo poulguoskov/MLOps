@@ -663,7 +663,12 @@ These monitoring capabilities would be essential for a production system to ensu
 >
 > Answer:
 
---- question 27 fill here ---
+We ended up using about $34.58 in total. The most expensive service was definitely the Compute Engine, which cost us $29.36. This was mainly because we started out by using Virtual Machines manually. Since we had to shut them down ourselves, we ended up paying for a lot of idle time when we weren't actually running anything.
+
+In comparison, Vertex AI was way cheaper. Since it's a managed service, it automatically spins up resources for the job and kills them right after, so we didn't waste any credits on downtime.
+
+Working in the cloud was both a fun and challenging experience, since it was all new to us. It was interesting to see the potential, especially the big difference between managing VMs ourselves vs. using Vertex. Also, since we didn't use DVC, the cloud was a really convenient place to store our data
+
 
 ### Question 28
 
