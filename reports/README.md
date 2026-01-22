@@ -640,7 +640,11 @@ The load test identified a potential thread-safety issue with the tokenizer when
 >
 > Answer:
 
---- question 26 fill here ---
+We did not manage to implement monitoring of our deployed model. We would like to have implemented Prometheus metrics to track request counts, error rates, and response latency over time. This would allow us to detect performance degradation or unusual traffic patterns.
+
+Additionally, logging prediction inputs and outputs to Cloud Storage would enable data drift detection by comparing the distribution of production data against the training data. Setting up alerts in GCP Cloud Monitoring would notify us if error rates spike or if the API becomes unresponsive.
+
+These monitoring capabilities would be essential for a production system to ensure model quality over time and catch issues before they affect users.
 
 ## Overall discussion of project
 
