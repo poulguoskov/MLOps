@@ -684,7 +684,9 @@ Working in the cloud was both a fun and challenging experience, since it was all
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend application using Streamlit. We did this to demonstrate how it could look for end-users without requiring them to use terminal commands. The frontend features a backend selector, allowing users to switch between the standard PyTorch API, the lightweight ONNX version, and the BentoML deployment. This effectively demonstrates the performance differences (latency) between the serving frameworks in real-time. We also implemented a batch processing mode to classify multiple headlines simultaneously.
+
+Additionally, instead of having a standard README, we decided to set up MkDocs to make the project documentation look more structured and readable. We configured a GitHub Actions workflow to automatically build and publish our documentation to GitHub Pages, ensuring that our API references and setup guides are always synchronized with the codebase.
 
 ### Question 29
 
