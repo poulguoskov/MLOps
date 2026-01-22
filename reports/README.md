@@ -198,7 +198,7 @@ This single command reads the lock file and installs both production and develop
 >
 > Answer:
 
-From the cookiecutter template we filled out the `src/clickbait_classifier` folder with our model, training, data processing, and API code. We also filled out the `configs` folder with Hydra configuration files, the `dockerfiles` folder with multiple Dockerfiles for training, evaluation, and deployment, and the `tests` folder with unit tests for data, model, and API.
+From the cookiecutter template we filled out the `src/clickbait_classifier` folder with our model, training, data processing, and API code, plus supporting utilities and helpers. We also filled out the `configs` folder with Hydra configuration files, the `dockerfiles` folder with multiple Dockerfiles for training, evaluation, and deployment, and the `tests` folder with unit tests for data, model, and API.
 
 We kept the `docs` folder for `mkdocs` documentation and the `reports` folder for the exam template. We added a `scripts` folder for utility scripts like `ONNX` export and benchmarking. We also added GitHub Actions workflows in `.github/workflows` for CI, model registry triggers, and documentation deployment.
 
@@ -370,7 +370,7 @@ This approach combines the structure of Hydra-based configuration files with a u
 >
 > Answer:
 
-First, we enforce determinism in `train.py` by calling `pl.seed_everything(cfg.training.seed)` and initializing the Lightning Trainer with `deterministic=True`. This locks all random number generators (NumPy, PyTorch, CUDA) to ensuring identical weight initialization and data splitting across runs.
+First, we enforce determinism in `train.py` by calling `pl.seed_everything(cfg.training.seed)` and initializing the Lightning Trainer with `deterministic=True`. This locks all random number generators (NumPy, PyTorch, CUDA) to ensuring identical weight initialization and data splitting across runs for consistent results.
 
 To ensure no information is lost, we integrated Weights & Biases (W&B) using the `WandbLogger`. Beyond tracking metrics, we configured the logger with `log_model="all"`. This automatically uploads our trained model checkpoints directly to the W&B cloud, serving as a remote model registry. Additionally, our script saves the final configuration (including any CLI overrides) as a local `config.yaml` file via the `save_config` function.
 
@@ -705,11 +705,11 @@ Additionally, instead of having a standard README, we decided to set up MkDocs t
 
 ![Architecture diagram of the MLOps pipeline](figures/overview.png)
 
-The diagram shows the overall architecture of our MLOps pipeline, illustrating how code flows from local development to production deployment.
+The diagram shows the overall architecture of our MLOps pipeline, illustrating how code flows from local development to production deployment across our training, serving, documentation, and continuous integration components.
 
-The starting point is local development, where we write source code and run tests with pytest. When code is pushed to GitHub, it triggers multiple workflows.
+The starting point is local development, where we write source code and run tests with pytest in a controlled Python environment. When code is pushed to GitHub, it triggers multiple workflows automatically.
 
-GitHub Actions runs our CI pipeline for linting and testing, and also builds documentation to GitHub Pages. Pushes to main also trigger Google Cloud Build, which automatically builds Docker images and pushes them to Artifact Registry. From there, images are deployed to Cloud Run, where we host the Streamlit frontend, FastAPI backend, and an ONNX-optimized API variant.
+GitHub Actions runs our CI pipeline for linting and testing, and also builds documentation to GitHub Pages. Pushes to main also trigger Google Cloud Build, which automatically builds Docker images and pushes them to Artifact Registry with versioned tags. From there, images are deployed to Cloud Run, where we host the Streamlit frontend, FastAPI backend, and an ONNX-optimized API variant with faster startup times.
 
 For model training, Vertex AI pulls training data from Cloud Storage. During training, metrics and logs are sent to Weights & Biases for experiment tracking. Trained models are registered in the W&B Model Registry, which can trigger GitHub Actions via webhook to promote models to production.
 
